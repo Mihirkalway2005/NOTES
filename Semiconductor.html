@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit IV — Semiconductors & Devices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --navy:      #0a0f2e;
+  --navy2:     #111840;
+  --navy3:     #1a2254;
+  --teal:      #00c9a7;
+  --teal2:     #00a88b;
+  --amber:     #f5a623;
+  --coral:     #ff6b6b;
+  --purple:    #a78bfa;
+  --sky:       #38bdf8;
+  --white:     #f0f4ff;
+  --muted:     #8892b0;
+  --border:    rgba(0,201,167,0.18);
+  --card-bg:   rgba(17,24,64,0.85);
+  --glass:     rgba(255,255,255,0.04);
+  --radius:    12px;
+  --ff-head:   'Syne', sans-serif;
+  --ff-body:   'Lora', serif;
+  --ff-mono:   'Space Mono', monospace;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Reset & Base ──────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--navy);
+  color:var(--white);
+  font-family:var(--ff-body);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+::selection{background:var(--teal);color:var(--navy)}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--navy2)}
+::-webkit-scrollbar-thumb{background:var(--teal2);border-radius:3px}
+
+/* ── Noise texture overlay ─────────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* ── Hero ──────────────────────────────────────────────────── */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;padding:2rem;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%, #1a2a6c22 0%, transparent 70%),
+             radial-gradient(ellipse 60% 40% at 80% 80%, #00c9a715 0%, transparent 60%),
+             var(--navy);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+  animation:gridPulse 8s ease-in-out infinite;
+}
+@keyframes gridPulse{0%,100%{opacity:0.4}50%{opacity:0.7}}
+
+.hero-glow{
+  position:absolute;width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(0,201,167,0.08) 0%, transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:glow 6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes glow{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+
+.hero-content{position:relative;z-index:1;text-align:center;max-width:900px}
+.hero-badge{
+  display:inline-block;
+  font-family:var(--ff-mono);font-size:0.7rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--teal);border:1px solid var(--teal);
+  padding:0.35em 1em;border-radius:20px;
+  margin-bottom:1.5rem;
+  animation:fadeUp 0.6s ease both;
+}
+.hero-title{
+  font-family:var(--ff-head);font-size:clamp(2.8rem,8vw,5.5rem);
+  font-weight:800;line-height:1.05;letter-spacing:-0.02em;
+  margin-bottom:0.5rem;
+  animation:fadeUp 0.7s ease 0.1s both;
+}
+.hero-title span{
+  background:linear-gradient(135deg,var(--teal),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-family:var(--ff-head);font-size:clamp(1rem,2.5vw,1.3rem);
+  color:var(--muted);font-weight:400;margin-bottom:2.5rem;
+  animation:fadeUp 0.7s ease 0.2s both;
+}
+.hero-meta{
+  display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;
+  font-family:var(--ff-mono);font-size:0.75rem;color:var(--muted);
+  animation:fadeUp 0.7s ease 0.3s both;
+}
+.hero-meta span{display:flex;align-items:center;gap:0.4rem}
+.hero-meta span::before{content:'◆';color:var(--teal);font-size:0.5rem}
+
+.hero-topics{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:0.75rem;margin-top:3rem;
+  animation:fadeUp 0.7s ease 0.4s both;
+}
+.hero-topic{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:8px;padding:0.7rem 1rem;
+  font-family:var(--ff-mono);font-size:0.72rem;
+  color:var(--teal);text-align:left;
+  transition:var(--transition);
+  backdrop-filter:blur(8px);
+}
+.hero-topic:hover{background:rgba(0,201,167,0.08);border-color:var(--teal)}
+.hero-topic::before{content:'→  ';opacity:0.5}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Sticky Nav ────────────────────────────────────────────── */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,15,46,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 1.5rem;
+}
+.nav-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;gap:0.5rem;
+  overflow-x:auto;scrollbar-width:none;
+  padding:0.6rem 0;
+}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-logo{
+  font-family:var(--ff-head);font-size:0.85rem;font-weight:800;
+  color:var(--teal);white-space:nowrap;margin-right:1rem;
+  letter-spacing:0.05em;
+}
+.nav-link{
+  font-family:var(--ff-mono);font-size:0.68rem;
+  color:var(--muted);text-decoration:none;
+  padding:0.3em 0.75em;border-radius:4px;
+  white-space:nowrap;transition:var(--transition);
+  border:1px solid transparent;
+}
+.nav-link:hover,.nav-link.active{color:var(--teal);border-color:var(--border);background:var(--glass)}
+
+/* ── Main Layout ───────────────────────────────────────────── */
+.main{max-width:1200px;margin:0 auto;padding:0 1.5rem 6rem}
+
+/* ── Section ───────────────────────────────────────────────── */
+.section{margin-top:5rem}
+.section-header{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:2rem;padding-bottom:1rem;
+  border-bottom:1px solid var(--border);
+}
+.section-num{
+  font-family:var(--ff-mono);font-size:0.7rem;
+  color:var(--teal);background:rgba(0,201,167,0.1);
+  border:1px solid rgba(0,201,167,0.3);
+  padding:0.3em 0.7em;border-radius:4px;white-space:nowrap;
+}
+.section-title{
+  font-family:var(--ff-head);font-size:clamp(1.3rem,3vw,1.8rem);
+  font-weight:800;letter-spacing:-0.01em;
+}
+.section-title.teal{color:var(--teal)}
+.section-title.amber{color:var(--amber)}
+.section-title.coral{color:var(--coral)}
+.section-title.purple{color:var(--purple)}
+.section-title.sky{color:var(--sky)}
+
+/* ── Subsection ────────────────────────────────────────────── */
+.subsection{margin-top:2.5rem}
+.subsection-title{
+  font-family:var(--ff-head);font-size:1.05rem;font-weight:700;
+  color:var(--sky);margin-bottom:1rem;
+  padding-left:0.8rem;border-left:3px solid var(--teal);
+}
+
+/* ── Body text ─────────────────────────────────────────────── */
+.text{
+  font-size:0.95rem;line-height:1.8;color:rgba(240,244,255,0.85);
+  margin-bottom:1rem;
+}
+.text b,.text strong{color:var(--white);font-weight:600}
+.text i,.text em{color:var(--teal);font-style:italic}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.25rem 1.5rem;
+  margin:1rem 0;
+  backdrop-filter:blur(8px);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:4px;height:100%;
+  background:linear-gradient(180deg,var(--teal),var(--sky));
+  border-radius:var(--radius) 0 0 var(--radius);
+}
+.card.amber::before{background:linear-gradient(180deg,var(--amber),var(--coral))}
+.card.coral::before{background:linear-gradient(180deg,var(--coral),var(--purple))}
+.card.purple::before{background:linear-gradient(180deg,var(--purple),var(--sky))}
+.card.green::before{background:linear-gradient(180deg,#4ade80,var(--teal))}
+.card.yellow::before{background:linear-gradient(180deg,#facc15,var(--amber))}
+
+.card-title{
+  font-family:var(--ff-head);font-size:0.85rem;font-weight:700;
+  color:var(--teal);margin-bottom:0.75rem;letter-spacing:0.05em;
+  text-transform:uppercase;
+}
+.card.amber .card-title{color:var(--amber)}
+.card.coral .card-title{color:var(--coral)}
+.card.purple .card-title{color:var(--purple)}
+.card.green .card-title{color:#4ade80}
+.card.yellow .card-title{color:#facc15}
+
+.card ul{list-style:none;padding:0}
+.card ul li{
+  font-size:0.9rem;line-height:1.7;
+  color:rgba(240,244,255,0.82);
+  padding:0.25rem 0 0.25rem 1.4rem;
+  position:relative;
+}
+.card ul li::before{
+  content:'◆';position:absolute;left:0;
+  color:var(--teal);font-size:0.45rem;top:0.55rem;
+}
+.card.amber ul li::before{color:var(--amber)}
+.card.coral ul li::before{color:var(--coral)}
+.card.purple ul li::before{color:var(--purple)}
+.card.green ul li::before{color:#4ade80}
+.card.yellow ul li::before{color:#facc15}
+
+/* ── Formula Box ───────────────────────────────────────────── */
+.formula-box{
+  background:rgba(26,34,84,0.9);
+  border:1px solid rgba(167,139,250,0.35);
+  border-radius:var(--radius);
+  padding:1.1rem 1.5rem;
+  margin:1.25rem 0;
+  position:relative;
+}
+.formula-box::after{
+  content:'';position:absolute;inset:0;
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(167,139,250,0.05),transparent);
+  pointer-events:none;
+}
+.formula-label{
+  font-family:var(--ff-mono);font-size:0.65rem;
+  color:var(--purple);letter-spacing:0.12em;text-transform:uppercase;
+  margin-bottom:0.5rem;
+}
+.formula-eq{
+  font-family:var(--ff-mono);font-size:clamp(0.85rem,2vw,1.05rem);
+  color:var(--white);font-weight:700;
+  text-align:center;padding:0.4rem 0;
+  word-break:break-word;
+}
+.formula-note{
+  font-size:0.78rem;color:var(--muted);
+  font-style:italic;margin-top:0.5rem;
+  font-family:var(--ff-body);text-align:center;
+}
+
+/* ── Tables ────────────────────────────────────────────────── */
+.table-wrap{overflow-x:auto;margin:1.25rem 0;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;min-width:500px}
+thead tr{background:var(--navy3)}
+th{
+  font-family:var(--ff-head);font-size:0.78rem;font-weight:700;
+  letter-spacing:0.07em;text-transform:uppercase;
+  color:var(--teal);padding:0.8rem 1rem;text-align:left;
+  white-space:nowrap;
+}
+th.amber{color:var(--amber)}
+th.coral{color:var(--coral)}
+th.purple{color:var(--purple)}
+th.green{color:#4ade80}
+
+td{
+  font-size:0.88rem;padding:0.7rem 1rem;
+  border-top:1px solid rgba(255,255,255,0.05);
+  vertical-align:top;line-height:1.6;
+}
+tbody tr:nth-child(odd){background:rgba(255,255,255,0.015)}
+tbody tr:hover{background:rgba(0,201,167,0.04)}
+td strong{color:var(--white)}
+td em{color:var(--teal);font-style:normal;font-weight:600}
+
+/* ── Note ──────────────────────────────────────────────────── */
+.note{
+  background:rgba(245,166,35,0.07);
+  border-left:3px solid var(--amber);
+  padding:0.75rem 1rem;
+  border-radius:0 var(--radius) var(--radius) 0;
+  font-size:0.85rem;color:rgba(240,244,255,0.75);
+  font-style:italic;margin:1rem 0;
+}
+.note strong{color:var(--amber);font-style:normal}
+
+/* ── Two-column grid ───────────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+@media(max-width:640px){.grid-2{grid-template-columns:1fr}}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+@media(max-width:800px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.grid-3{grid-template-columns:1fr}}
+
+/* ── Mini-card (for comparison) ───────────────────────────── */
+.mini-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1rem 1.2rem;
+}
+.mini-card h4{
+  font-family:var(--ff-head);font-size:0.9rem;font-weight:700;
+  margin-bottom:0.6rem;
+}
+.mini-card.n h4{color:var(--sky)}
+.mini-card.p h4{color:var(--coral)}
+.mini-card ul{list-style:none;padding:0}
+.mini-card ul li{font-size:0.84rem;color:rgba(240,244,255,0.78);padding:0.15rem 0}
+.mini-card ul li::before{content:'• ';opacity:0.5}
+
+/* ── Solved Problems ───────────────────────────────────────── */
+.problem{
+  background:rgba(17,24,64,0.6);
+  border:1px solid rgba(0,201,167,0.15);
+  border-radius:var(--radius);padding:1.25rem 1.5rem;
+  margin:1.25rem 0;
+}
+.problem-num{
+  font-family:var(--ff-mono);font-size:0.68rem;
+  color:var(--teal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:0.5rem;
+}
+.problem-q{
+  font-size:0.92rem;color:var(--white);
+  font-weight:600;margin-bottom:0.75rem;line-height:1.6;
+}
+.problem-step{
+  font-family:var(--ff-mono);font-size:0.82rem;
+  color:rgba(240,244,255,0.75);
+  background:rgba(0,0,0,0.2);
+  border-radius:6px;padding:0.6rem 0.9rem;
+  margin:0.4rem 0;word-break:break-word;
+}
+.problem-answer{
+  display:inline-block;
+  background:rgba(0,201,167,0.12);
+  border:1px solid rgba(0,201,167,0.3);
+  color:var(--teal);
+  font-family:var(--ff-mono);font-size:0.8rem;
+  padding:0.35em 0.9em;border-radius:4px;
+  margin-top:0.5rem;font-weight:700;
+}
+
+/* ── Summary table ─────────────────────────────────────────── */
+.summary-row{
+  display:grid;grid-template-columns:180px 1fr;
+  border-top:1px solid var(--border);
+}
+.summary-row:first-child{border-top:none}
+.summary-key{
+  font-family:var(--ff-head);font-size:0.82rem;font-weight:700;
+  color:var(--teal);padding:0.6rem 1rem;
+  background:rgba(0,201,167,0.06);
+  display:flex;align-items:center;
+}
+.summary-val{
+  font-size:0.88rem;color:rgba(240,244,255,0.82);
+  padding:0.6rem 1rem;line-height:1.6;
+}
+@media(max-width:560px){
+  .summary-row{grid-template-columns:1fr}
+  .summary-key{border-bottom:1px solid var(--border)}
+}
+
+/* ── Formulas quick-ref ─────────────────────────────────────── */
+.formula-ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.75rem;margin:1rem 0}
+.formula-ref-item{
+  background:rgba(26,34,84,0.7);
+  border:1px solid rgba(167,139,250,0.2);
+  border-radius:8px;padding:0.9rem 1rem;
+}
+.formula-ref-item .flabel{
+  font-family:var(--ff-mono);font-size:0.68rem;color:var(--purple);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;
+}
+.formula-ref-item .feq{
+  font-family:var(--ff-mono);font-size:0.88rem;color:var(--white);
+  font-weight:700;margin-bottom:0.3rem;word-break:break-word;
+}
+.formula-ref-item .fnote{font-size:0.75rem;color:var(--muted);font-style:italic}
+
+/* ── Back to top ───────────────────────────────────────────── */
+.back-top{
+  position:fixed;bottom:2rem;right:2rem;z-index:99;
+  width:44px;height:44px;
+  background:var(--teal);color:var(--navy);
+  border:none;border-radius:50%;cursor:pointer;
+  font-size:1.1rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(0,201,167,0.4);
+  transition:var(--transition);opacity:0;pointer-events:none;
+}
+.back-top.show{opacity:1;pointer-events:auto}
+.back-top:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,201,167,0.5)}
+
+/* ── Footer ────────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);
+  padding:2.5rem 1.5rem;
+  text-align:center;
+  font-family:var(--ff-mono);font-size:0.72rem;color:var(--muted);
+}
+footer strong{color:var(--teal)}
+
+/* ── Progress bar ───────────────────────────────────────────── */
+.progress-bar{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--teal),var(--sky));
+  z-index:200;transition:width 0.1s;width:0%;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media(max-width:768px){
+  .main{padding:0 1rem 4rem}
+  .hero{padding:1.5rem 1rem;min-height:auto;padding-top:5rem;padding-bottom:3rem}
+  .hero-topics{grid-template-columns:1fr 1fr}
+  .section-header{flex-wrap:wrap}
+}
+@media(max-width:480px){
+  .hero-topics{grid-template-columns:1fr}
+  .nav-logo{display:none}
+  .formula-ref-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- HERO ─────────────────────────────────────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Physics · School of Technology · Woxsen University</div>
+    <h1 class="hero-title">Unit <span>IV</span></h1>
+    <p class="hero-title" style="font-family:var(--ff-head);font-size:clamp(1.4rem,4vw,2.4rem);font-weight:800;color:var(--white);margin-bottom:0.5rem">
+      Semiconductors &amp; Devices
+    </p>
+    <p class="hero-sub">Comprehensive Study Notes — Dr Kamil Reza K</p>
+    <div class="hero-meta">
+      <span>Intrinsic &amp; Extrinsic SC</span>
+      <span>Band Gap Theory</span>
+      <span>Hall Effect</span>
+      <span>P-N Junction</span>
+      <span>Optoelectronics</span>
+    </div>
+    <div class="hero-topics">
+      <div class="hero-topic">Intrinsic &amp; Extrinsic Semiconductors</div>
+      <div class="hero-topic">Direct &amp; Indirect Band Gap</div>
+      <div class="hero-topic">Carrier Concentration &amp; Conductivity</div>
+      <div class="hero-topic">Hall Effect &amp; Applications</div>
+      <div class="hero-topic">V-I Characteristics of P-N Diode</div>
+      <div class="hero-topic">LED · Photodiode · Solar Cell · Laser</div>
+    </div>
+  </div>
+</section>
+
+<!-- STICKY NAV ──────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-logo">UNIT IV</span>
+    <a class="nav-link" href="#sec1">Intro</a>
+    <a class="nav-link" href="#sec2">Types</a>
+    <a class="nav-link" href="#sec3">Bandgap</a>
+    <a class="nav-link" href="#sec4">Conductivity</a>
+    <a class="nav-link" href="#sec5">Hall Effect</a>
+    <a class="nav-link" href="#sec6">P-N Diode</a>
+    <a class="nav-link" href="#sec7">Carrier Action</a>
+    <a class="nav-link" href="#sec8">Optoelectronics</a>
+    <a class="nav-link" href="#sec9">Comparison</a>
+    <a class="nav-link" href="#sec10">Formulas</a>
+    <a class="nav-link" href="#sec11">Problems</a>
+    <a class="nav-link" href="#sec12">Summary</a>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ── SECTION 1: INTRODUCTION ──────────────────────────────── -->
+<section class="section" id="sec1">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title teal">Introduction to Semiconductors</h2>
+  </div>
+
+  <p class="text">A <strong>semiconductor</strong> is a material whose electrical conductivity lies between that of a conductor and an insulator. Unlike metals, the resistivity of a semiconductor <em>decreases</em> with increasing temperature. Semiconductors are the backbone of modern electronics — transistors, diodes, solar cells, and LEDs all rely on them.</p>
+
+  <div class="subsection">
+    <h3 class="subsection-title">1.1 Energy Band Theory</h3>
+    <p class="text">When ~10²³ atoms form a crystal, discrete atomic energy levels broaden into continuous <strong>energy bands</strong>. The gap between bands determines whether a material conducts or insulates.</p>
+    <div class="card">
+      <div class="card-title">Key Energy Bands</div>
+      <ul>
+        <li><strong>Valence Band (VB):</strong> Highest filled band at 0 K — electrons here are bound to atoms</li>
+        <li><strong>Conduction Band (CB):</strong> Next higher band — electrons here move freely and conduct</li>
+        <li><strong>Band Gap (Eᵍ):</strong> Forbidden energy region between VB and CB — its width classifies the material</li>
+        <li><strong>Fermi Level (E<sub>F</sub>):</strong> Highest energy level an electron can occupy at absolute zero (0 K)</li>
+      </ul>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Material</th><th>Band Structure</th><th>Band Gap</th><th>Resistivity (Ω·cm)</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Conductor</strong></td><td>VB and CB overlap</td><td>~0 eV</td><td>10⁻⁶ – 10⁻³</td><td>Cu, Al, Ag</td></tr>
+          <tr><td><strong>Semiconductor</strong></td><td>Small gap between VB &amp; CB</td><td>0.1 – 3 eV</td><td>10⁻³ – 10⁸</td><td>Si, Ge, GaAs</td></tr>
+          <tr><td><strong>Insulator</strong></td><td>Large gap between VB &amp; CB</td><td>&gt; 3 eV</td><td>10⁸ – 10¹⁶</td><td>Diamond, SiO₂</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">1.2 Fermi Level Position</h3>
+    <div class="grid-3">
+      <div class="mini-card" style="border-color:rgba(56,189,248,0.3)">
+        <h4>Intrinsic SC</h4>
+        <ul><li>Fermi level at midgap</li><li>Exactly between VB &amp; CB</li><li>n = p = nᵢ</li></ul>
+      </div>
+      <div class="mini-card n">
+        <h4>N-Type SC</h4>
+        <ul><li>Fermi level near CB</li><li>Closer to conduction band</li><li>n ≫ p</li></ul>
+      </div>
+      <div class="mini-card p">
+        <h4>P-Type SC</h4>
+        <ul><li>Fermi level near VB</li><li>Closer to valence band</li><li>p ≫ n</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2: TYPES ──────────────────────────────────────── -->
+<section class="section" id="sec2">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title sky">Types of Semiconductors</h2>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">2.1 Intrinsic (Pure) Semiconductors</h3>
+    <p class="text">An <strong>intrinsic semiconductor</strong> is a chemically pure semiconductor with no intentional impurities. Its electrical properties are governed entirely by the material itself.</p>
+    <div class="card green">
+      <div class="card-title">Key Properties</div>
+      <ul>
+        <li>Examples: Pure Silicon (Si), Pure Germanium (Ge)</li>
+        <li>At room temperature: <strong>number of electrons = number of holes → n = p = nᵢ</strong></li>
+        <li>Carrier concentration increases exponentially with temperature</li>
+        <li>Very low conductivity at room temperature</li>
+        <li>Fermi level lies exactly in the middle of the band gap</li>
+        <li>Both electrons (CB) and holes (VB) act as charge carriers</li>
+        <li>Electrical neutrality maintained at all times</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">2.2 Extrinsic (Doped) Semiconductors</h3>
+    <p class="text">An <strong>extrinsic semiconductor</strong> is obtained by adding controlled amounts of impurity atoms (<strong>dopants</strong>) into an intrinsic semiconductor — a process called <em>doping</em>. Doping drastically increases conductivity without breaking covalent bonds.</p>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(56,189,248,0.3)">
+        <div class="card-title" style="color:var(--sky)">N-Type Semiconductor</div>
+        <ul>
+          <li><strong>Dopant:</strong> Pentavalent (5 valence e⁻) — P, As, Sb</li>
+          <li><strong>Majority carriers:</strong> Electrons (e⁻)</li>
+          <li><strong>Minority carriers:</strong> Holes (h⁺)</li>
+          <li><strong>Fermi level:</strong> Near conduction band</li>
+          <li><strong>Donor atom</strong> donates 1 free electron</li>
+          <li>5th electron is superfluous → enters CB</li>
+          <li>Hall coefficient: R<sub>H</sub> &lt; 0 (negative)</li>
+          <li>Net charge: Electrically neutral overall</li>
+        </ul>
+      </div>
+      <div class="card coral">
+        <div class="card-title">P-Type Semiconductor</div>
+        <ul>
+          <li><strong>Dopant:</strong> Trivalent (3 valence e⁻) — B, Ga, In</li>
+          <li><strong>Majority carriers:</strong> Holes (h⁺)</li>
+          <li><strong>Minority carriers:</strong> Electrons (e⁻)</li>
+          <li><strong>Fermi level:</strong> Near valence band</li>
+          <li><strong>Acceptor atom</strong> accepts 1 electron → creates hole</li>
+          <li>Deficiency of one covalent bond = hole</li>
+          <li>Hall coefficient: R<sub>H</sub> &gt; 0 (positive)</li>
+          <li>Net charge: Electrically neutral overall</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note"><strong>Important:</strong> Doped semiconductors remain electrically neutral overall. "N-type" and "P-type" refer to the dominant mobile charge carriers, NOT the net charge of the material.</div>
+  </div>
+</section>
+
+<!-- ── SECTION 3: BANDGAP ────────────────────────────────────── -->
+<section class="section" id="sec3">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title amber">Direct &amp; Indirect Band Gap Semiconductors</h2>
+  </div>
+
+  <p class="text">In a crystal, the energy-momentum (E-K) relationship depends on crystal direction. This leads to two types of band gaps based on the alignment of conduction band minimum and valence band maximum in <strong>momentum (k-vector) space</strong>.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th class="amber">Feature</th><th class="amber">Direct Band Gap</th><th class="amber">Indirect Band Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>CB min &amp; VB max</strong></td><td>Same k-value (same momentum)</td><td>Different k-values (different momentum)</td></tr>
+        <tr><td><strong>Electron transition</strong></td><td>Directly emits a photon</td><td>Requires phonon (lattice vibration) assistance</td></tr>
+        <tr><td><strong>Light emission</strong></td><td>Efficient — emits photons readily</td><td>Inefficient — energy released as heat (phonons)</td></tr>
+        <tr><td><strong>Suitable for</strong></td><td>LEDs, Laser diodes, Photodetectors</td><td>Transistors, Si-based electronics</td></tr>
+        <tr><td><strong>Examples</strong></td><td>GaAs, InAs, GaN, InGaN, Amorphous Si</td><td>Crystalline Si, Ge, AlSb</td></tr>
+        <tr><td><strong>Band gap at 300K</strong></td><td>GaAs = 1.42 eV, GaN = 3.4 eV</td><td>Si = 1.12 eV, Ge = 0.66 eV</td></tr>
+        <tr><td><strong>Photon emission</strong></td><td>Direct — high quantum efficiency</td><td>Via phonon — low quantum efficiency</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note"><strong>Why Si and Ge cannot be used for LEDs:</strong> Both have indirect band gaps. Electron transitions require phonon assistance and energy is lost as heat rather than emitted as photons. Direct band gap materials (GaAs, GaN, InGaN) are used for LEDs and lasers.</div>
+
+  <div class="formula-box">
+    <div class="formula-label">Photon Emission Condition</div>
+    <div class="formula-eq">hν ≥ Eᵍ  (photon energy must exceed band gap)</div>
+    <div class="formula-note">In indirect gap: additional phonon with momentum ħq is needed → transition probability much lower</div>
+  </div>
+</section>
+
+<!-- ── SECTION 4: CARRIER CONCENTRATION & CONDUCTIVITY ──────── -->
+<section class="section" id="sec4">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title teal">Carrier Concentration &amp; Conductivity</h2>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">4.1 Carrier Concentration in Intrinsic Semiconductors</h3>
+    <p class="text">In an intrinsic semiconductor, thermally generated electron-hole pairs maintain charge neutrality: <strong>n = p = nᵢ</strong>, where nᵢ is the <em>intrinsic carrier concentration</em>.</p>
+
+    <div class="formula-box">
+      <div class="formula-label">Electron Concentration</div>
+      <div class="formula-eq">n = 2(2πm*ₑkT/h²)^(3/2) · exp((E_F − E_C)/kT)</div>
+      <div class="formula-note">m*ₑ = effective mass of electron, k = Boltzmann constant, T = temperature (K)</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Hole Concentration</div>
+      <div class="formula-eq">p = 2(2πm*ₕkT/h²)^(3/2) · exp((E_V − E_F)/kT)</div>
+      <div class="formula-note">m*ₕ = effective mass of hole, E_V = valence band energy</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Intrinsic Carrier Concentration (nᵢ)</div>
+      <div class="formula-eq">nᵢ = 2(2πkT/h²)^(3/2) · (m*ₑ m*ₕ)^(3/4) · exp(−Eᵍ/2kT)</div>
+      <div class="formula-note">Mass-Action Law: n · p = nᵢ² (valid for intrinsic and extrinsic)</div>
+    </div>
+
+    <div class="card green">
+      <div class="card-title">Key Observations</div>
+      <ul>
+        <li>nᵢ increases exponentially with temperature (SC becomes more conductive when heated)</li>
+        <li>At room temperature: nᵢ(Si) ≈ 1.5×10¹⁰ cm⁻³, nᵢ(Ge) ≈ 2.4×10¹³ cm⁻³</li>
+        <li><strong>Mass-Action Law:</strong> n·p = nᵢ² — holds for both intrinsic and extrinsic semiconductors</li>
+        <li>Larger band gap → smaller nᵢ → less intrinsic conductivity at room temperature</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">4.2 Electrical Conductivity</h3>
+    <p class="text"><strong>Electrical conductivity (σ)</strong> quantifies how well a material conducts electricity. For a semiconductor, both electrons and holes contribute:</p>
+
+    <div class="formula-box">
+      <div class="formula-label">General Conductivity</div>
+      <div class="formula-eq">σ = n·e·μₑ + p·e·μₕ</div>
+      <div class="formula-note">μₑ, μₕ = electron and hole mobility (cm²/V·s); e = 1.6×10⁻¹⁹ C</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">For Intrinsic Semiconductor (n = p = nᵢ)</div>
+      <div class="formula-eq">σ = nᵢ · e · (μₑ + μₕ) = A · exp(−Eᵍ/2kT)</div>
+      <div class="formula-note">A = pre-exponential constant</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Logarithmic Form (for Eᵍ Determination)</div>
+      <div class="formula-eq">ln σ = ln A − Eᵍ/(2kT)</div>
+      <div class="formula-note">Plot ln σ vs 1/T → straight line with slope = −Eᵍ/2k → find band gap experimentally</div>
+    </div>
+
+    <p class="text"><strong>Mobility (μ)</strong> is the measure of how fast a charge carrier moves through a semiconductor under unit electric field. It is affected by temperature and doping concentration. <em>μₑ &gt; μₕ</em> for most semiconductors (electrons are lighter).</p>
+  </div>
+</section>
+
+<!-- ── SECTION 5: HALL EFFECT ────────────────────────────────── -->
+<section class="section" id="sec5">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title" style="color:#4ade80">Hall Effect &amp; Applications</h2>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">Definition — Hall Effect</div>
+    <ul>
+      <li>When a current-carrying conductor (or semiconductor) is placed in a <strong>transverse magnetic field</strong>,</li>
+      <li>An electric field is produced <strong>perpendicular to BOTH</strong> the current and the magnetic field.</li>
+      <li>The generated transverse voltage is called the <strong>Hall Voltage (V<sub>H</sub>)</strong>.</li>
+      <li>The generated transverse electric field is called the <strong>Hall Electric Field (E<sub>H</sub>)</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">5.1 Theory &amp; Derivation</h3>
+    <p class="text">With current in x-direction and magnetic field B in z-direction, carriers experience a Lorentz force that deflects them. Charge accumulates until equilibrium is reached:</p>
+
+    <div class="formula-box">
+      <div class="formula-label">Equilibrium Condition</div>
+      <div class="formula-eq">eE_H = Bev  →  E_H = Bv = BJ/(ne) = BJR_H</div>
+      <div class="formula-note">J = current density, n = carrier density, v = carrier velocity</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Hall Coefficient</div>
+      <div class="formula-eq">R_H = E_H / (B·J) = 1/(pe) for p-type  |  R_H = −1/(ne) for n-type</div>
+      <div class="formula-note">Sign of R_H directly identifies semiconductor type</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Measured Hall Voltage &amp; Hall Coefficient</div>
+      <div class="formula-eq">V_H = R_H · B · I / t   →   R_H = V_H · t / (B · I)</div>
+      <div class="formula-note">t = sample thickness, I = current, B = magnetic flux density</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">5.2 Applications of Hall Effect</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="green">Application</th><th class="green">Method</th><th class="green">Formula</th></tr></thead>
+        <tbody>
+          <tr><td><strong>i) Type of Semiconductor</strong></td><td>N-type: R_H negative; P-type: R_H positive. Direction of Hall voltage reveals type.</td><td>Sign of R_H</td></tr>
+          <tr><td><strong>ii) Carrier Concentration</strong></td><td>Measure R_H experimentally, then calculate n or p directly</td><td>n = 1/(e·|R_H|)</td></tr>
+          <tr><td><strong>iii) Carrier Mobility</strong></td><td>Combine measured conductivity (σ) with Hall coefficient</td><td>μ = |R_H| · σ = σ/(ne)</td></tr>
+          <tr><td><strong>iv) Magnetic Flux Density</strong></td><td>Use a semiconductor sample of known R_H to measure unknown B</td><td>B = V_H·t / (I·R_H)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 6: P-N JUNCTION ───────────────────────────────── -->
+<section class="section" id="sec6">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title amber">P-N Junction Diode</h2>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">6.1 Formation</h3>
+    <p class="text">A P-N junction forms when p-type and n-type regions of the <strong>same semiconductor material</strong> are brought into metallurgical contact (homojunction).</p>
+    <div class="card amber">
+      <div class="card-title">Formation Process</div>
+      <ul>
+        <li>Holes diffuse p→n; electrons diffuse n→p (concentration gradient)</li>
+        <li>Near junction: carriers recombine, leaving ionized impurity atoms (space charge)</li>
+        <li>This creates the <strong>Depletion Region / Space Charge Region (SCR)</strong></li>
+        <li>Built-in electric field points from N to P across the depletion region</li>
+        <li>Equilibrium: diffusion current = drift current → zero net current</li>
+        <li>Built-in potential V<sub>bi</sub> opposes further diffusion</li>
+      </ul>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Built-in Potential</div>
+      <div class="formula-eq">V_bi = (kT/q) · ln(N_A · N_D / nᵢ²)</div>
+      <div class="formula-note">Si ~0.6 V, Ge &lt;0.66 V, GaAs ~1.2 V at 300K with N_A = N_D = 10¹⁵/cm³</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">6.2 Biasing Conditions</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="amber">Condition</th><th class="amber">Applied Voltage</th><th class="amber">Barrier Height</th><th class="amber">Depletion Width</th><th class="amber">Current</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Zero Bias</strong></td><td>V_A = 0</td><td>V_bi</td><td>W₀ (natural width)</td><td>Zero net current</td></tr>
+          <tr><td><strong>Forward Bias</strong></td><td>V_A &gt; 0 (+to P)</td><td>V_bi − V_A (reduces)</td><td>Decreases</td><td>Exponentially increases</td></tr>
+          <tr><td><strong>Reverse Bias</strong></td><td>V_A &lt; 0 (+to N)</td><td>V_bi + |V_A| (increases)</td><td>Increases</td><td>Very small I₀ (saturation)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">6.3 V-I Characteristics — Shockley Equation</h3>
+    <div class="formula-box">
+      <div class="formula-label">Ideal Diode Equation (Shockley)</div>
+      <div class="formula-eq">I = I₀ (e^(qV/kT) − 1)  =  I₀ (e^(V/V_T) − 1)</div>
+      <div class="formula-note">I₀ = reverse saturation current; V_T = kT/q = 0.026 V at 300K (thermal voltage)</div>
+    </div>
+    <div class="card amber">
+      <div class="card-title">V-I Characteristics Summary</div>
+      <ul>
+        <li>Forward Bias: Current rises exponentially after cut-in voltage (~0.3V Ge, ~0.7V Si, ~1.2V GaAs)</li>
+        <li>Reverse Bias: Small constant reverse saturation current I₀ flows (minority carrier drift)</li>
+        <li>Breakdown Region: At very high reverse voltage, current suddenly increases sharply</li>
+        <li>Temperature: Forward voltage drops ~2 mV/°C; I₀ roughly doubles every ~10°C rise</li>
+        <li>The "knee" of the I-V curve marks onset of significant forward conduction</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3 class="subsection-title">6.4 Breakdown Mechanisms</h3>
+    <div class="grid-2">
+      <div class="card coral">
+        <div class="card-title">Zener Breakdown</div>
+        <ul>
+          <li>Quantum tunneling of electrons across thin depletion region</li>
+          <li>Occurs in <strong>heavily doped</strong> junctions (thin depletion layer)</li>
+          <li>At <strong>lower reverse voltages</strong> (&lt;5 V)</li>
+          <li>E = V/d is large even at low V (small d)</li>
+          <li>Field ionizes covalent bonds directly</li>
+        </ul>
+      </div>
+      <div class="card purple">
+        <div class="card-title">Avalanche Breakdown</div>
+        <ul>
+          <li>Carrier multiplication by impact ionization</li>
+          <li>Occurs in <strong>moderately doped</strong> junctions (wide depletion layer)</li>
+          <li>At <strong>higher reverse voltages</strong> (&gt;5–6 V)</li>
+          <li>High-energy carriers collide with atoms → new e-h pairs → cascade</li>
+          <li>More voltage needed to build same field (large d)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 7: CARRIER ACTION ─────────────────────────────── -->
+<section class="section" id="sec7">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title purple">Carrier Action in Semiconductors</h2>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="purple">Type</th><th class="purple">Definition</th><th class="purple">Driving Force</th><th class="purple">Current Formula</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Drift</strong></td>
+          <td>Motion of carriers in response to an applied electric field. Electrons move opposite to field; holes move along field direction.</td>
+          <td>Electric field <em>E</em></td>
+          <td>J_drift = σE = (nμₑ + pμₕ)eE</td>
+        </tr>
+        <tr>
+          <td><strong>2. Diffusion</strong></td>
+          <td>Carriers spread from regions of HIGH concentration to LOW concentration due to random thermal motion. Like perfume spreading in a room.</td>
+          <td>Concentration gradient dn/dx</td>
+          <td>J_diff = eDₑ(dn/dx) + eDₕ(dp/dx)</td>
+        </tr>
+        <tr>
+          <td><strong>3. Recombination–Generation</strong></td>
+          <td>Recombination: e⁻ fills a hole, releasing energy. Generation: e-h pair created by absorbing thermal or optical energy.</td>
+          <td>Thermal / optical energy</td>
+          <td>Net rate R = (np − nᵢ²)/τ</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">Einstein's Relation (connects Diffusion & Mobility)</div>
+    <div class="formula-eq">D/μ = kT/q = V_T  ≈  0.026 V at 300 K</div>
+    <div class="formula-note">D = diffusion coefficient (cm²/s), μ = mobility (cm²/V·s), V_T = thermal voltage</div>
+  </div>
+</section>
+
+<!-- ── SECTION 8: OPTOELECTRONICS ─────────────────────────────── -->
+<section class="section" id="sec8">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2 class="section-title" style="color:#4ade80">Optoelectronic Devices</h2>
+  </div>
+  <p class="text">Optoelectronic devices exploit the interaction between light (photons) and electric current in semiconductors. Three functional categories:</p>
+  <div class="grid-3">
+    <div class="mini-card" style="border-color:rgba(74,222,128,0.3)"><h4 style="color:#4ade80">Photodetector</h4><ul><li>Light → Electric signal</li><li>Purpose: detect/measure light</li><li>Example: Photodiode</li></ul></div>
+    <div class="mini-card" style="border-color:rgba(250,204,21,0.3)"><h4 style="color:#facc15">Solar Cell</h4><ul><li>Light → Electric power</li><li>Purpose: generate electricity</li><li>Example: PV cell</li></ul></div>
+    <div class="mini-card" style="border-color:rgba(255,107,107,0.3)"><h4 style="color:#ff6b6b">LED / Laser</h4><ul><li>Electricity → Light</li><li>Purpose: emit photons</li><li>Example: LED, Laser diode</li></ul></div>
+  </div>
+
+  <!-- LED -->
+  <div class="subsection">
+    <h3 class="subsection-title">8.1 Light Emitting Diode (LED)</h3>
+    <p class="text">An LED is a p-n junction diode that emits light when <strong>forward biased</strong>. Electrons from the n-side recombine with holes on the p-side in the depletion/active region, releasing energy as photons (<em>electroluminescence</em>).</p>
+    <div class="formula-box">
+      <div class="formula-label">Photon Energy &amp; Wavelength</div>
+      <div class="formula-eq">E = hν = hc/λ = Eᵍ   →   λ = hc/Eᵍ</div>
+      <div class="formula-note">h = 6.626×10⁻³⁴ J·s, c = 3×10⁸ m/s; wavelength determines the colour of emitted light</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="color:#4ade80">Material</th><th style="color:#4ade80">Colour</th><th style="color:#4ade80">Wavelength</th><th style="color:#4ade80">Band Gap (eV)</th></tr></thead>
+        <tbody>
+          <tr><td>GaN (Gallium Nitride)</td><td>Blue / UV</td><td>~460 nm</td><td>3.4</td></tr>
+          <tr><td>InGaN (Indium Gallium Nitride)</td><td>Blue / Green / Violet</td><td>450–530 nm</td><td>2.3–3.4</td></tr>
+          <tr><td>AlGaInP</td><td>Red / Orange / Yellow</td><td>590–700 nm</td><td>1.8–2.1</td></tr>
+          <tr><td>GaAsP (Gallium Arsenide Phosphide)</td><td>Red</td><td>~650 nm</td><td>1.9</td></tr>
+          <tr><td>ZnSe (Zinc Selenide)</td><td>Blue / Green</td><td>~480 nm</td><td>2.6</td></tr>
+          <tr><td>SiC (Silicon Carbide)</td><td>Blue / UV</td><td>~420 nm</td><td>3.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid-2">
+      <div class="card green">
+        <div class="card-title">Advantages</div>
+        <ul>
+          <li>Small size and lightweight</li>
+          <li>Long operational life</li>
+          <li>High switching speed (&lt;1 ns)</li>
+          <li>Available in multiple spectral colours</li>
+          <li>High quantum efficiency</li>
+          <li>Low temperature dependence</li>
+          <li>Light output proportional to current (linear)</li>
+        </ul>
+      </div>
+      <div class="card coral">
+        <div class="card-title">Disadvantages</div>
+        <ul>
+          <li>Output power affected by temperature changes</li>
+          <li>Requires higher power than normal p-n diode</li>
+          <li>Low luminous efficiency</li>
+          <li>Overcurrent can permanently damage LED</li>
+          <li>Requires direct band gap material (no Si/Ge)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note"><strong>Why Si/Ge can't make LEDs:</strong> Indirect band gap → phonon-assisted transitions → energy lost as heat, not light. Direct band gap materials (GaAs, GaN) are required for efficient photon emission.</div>
+  </div>
+
+  <!-- Photodiode -->
+  <div class="subsection">
+    <h3 class="subsection-title">8.2 Photodiode</h3>
+    <p class="text">A photodiode is a p-n junction diode that converts incident light into electrical current. It operates under <strong>reverse bias</strong>.</p>
+    <div class="card green">
+      <div class="card-title">Working Principle</div>
+      <ul>
+        <li>Condition: photon energy hν &gt; Eᵍ  →  excites electron from VB to CB, creating e-h pair</li>
+        <li>Required wavelength: λ &lt; hc/Eᵍ = λ_cutoff</li>
+        <li>Built-in E-field at depletion region separates the generated e-h pair</li>
+        <li>Electrons drift to n-side; holes drift to p-side → photocurrent flows</li>
+        <li>Dark current (no light): very small reverse saturation current I₀</li>
+        <li>Illuminated current: I_photo ∝ incident light intensity</li>
+      </ul>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Cutoff Wavelength</div>
+      <div class="formula-eq">λ_c = hc / Eᵍ</div>
+      <div class="formula-note">Photons with λ &lt; λ_c are absorbed; photons with λ &gt; λ_c pass through unabsorbed</div>
+    </div>
+  </div>
+
+  <!-- PIN Photodiode -->
+  <div class="subsection">
+    <h3 class="subsection-title">8.3 PIN Photodiode</h3>
+    <p class="text">A PIN diode has an <strong>intrinsic (lightly doped)</strong> layer sandwiched between heavily doped p⁺ and n⁺ regions. This greatly improves performance.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="color:#4ade80">Feature</th><th style="color:#4ade80">PN Photodiode</th><th style="color:#4ade80">PIN Photodiode</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Intrinsic layer</strong></td><td>Absent</td><td>Present (thick, lightly doped)</td></tr>
+          <tr><td><strong>Depletion region</strong></td><td>Narrow</td><td>Much wider (spans i-layer)</td></tr>
+          <tr><td><strong>Response time</strong></td><td>Slower</td><td>Faster</td></tr>
+          <tr><td><strong>Junction capacitance</strong></td><td>Higher</td><td>Lower</td></tr>
+          <tr><td><strong>Reverse voltage</strong></td><td>Higher needed</td><td>Only ~5V needed</td></tr>
+          <tr><td><strong>Spectral response</strong></td><td>Limited</td><td>Extended (UV to IR)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><strong>Photon penetration:</strong> Short λ (UV) absorbed near surface; long λ (IR) penetrates deep. PIN structure with thick i-layer accommodates both efficiently.</div>
+  </div>
+
+  <!-- Solar Cell -->
+  <div class="subsection">
+    <h3 class="subsection-title">8.4 Solar Cell (Photovoltaic Cell)</h3>
+    <p class="text">A solar cell converts sunlight into electrical energy using the <strong>photovoltaic effect</strong>. It is essentially a p-n junction optimized for light absorption and carrier collection.</p>
+    <div class="card yellow">
+      <div class="card-title">Working Principle</div>
+      <ul>
+        <li><strong>Step 1:</strong> Photon absorption — hν &gt; Eᵍ creates electron-hole pair</li>
+        <li><strong>Step 2:</strong> Separation — built-in field sweeps electrons to n-side, holes to p-side</li>
+        <li><strong>Step 3:</strong> Collection — carriers flow through external circuit (conventional current p→n)</li>
+        <li><strong>Step 4:</strong> Power delivery — electrical power delivered to load</li>
+      </ul>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Solar Cell Current Equation</div>
+      <div class="formula-eq">I = I_sc − I₀(e^(qV/kT) − 1)</div>
+      <div class="formula-note">I_sc = short-circuit current (∝ light intensity); I₀ = dark saturation current</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Fill Factor</div>
+      <div class="formula-eq">FF = P_max / (I_sc × V_oc) = (I_mp × V_mp) / (I_sc × V_oc)</div>
+      <div class="formula-note">I_mp, V_mp = current &amp; voltage at max power point; Typical FF = 0.8–0.9</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-label">Solar Cell Efficiency</div>
+      <div class="formula-eq">η = P_max / P_in = FF × I_sc × V_oc / P_in</div>
+      <div class="formula-note">P_in = incident solar radiation power (W/m²); Standard: 1000 W/m²</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="amber">Parameter</th><th class="amber">Definition</th><th class="amber">Condition</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Short-circuit current (I_sc)</strong></td><td>Maximum current from cell</td><td>Output voltage = 0</td></tr>
+          <tr><td><strong>Open-circuit voltage (V_oc)</strong></td><td>Maximum voltage from cell</td><td>Output current = 0</td></tr>
+          <tr><td><strong>Maximum power (P_max)</strong></td><td>Maximum power deliverable</td><td>At optimum load</td></tr>
+          <tr><td><strong>Fill Factor (FF)</strong></td><td>"Squareness" of I-V curve</td><td>0.8–0.9 typical</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Semiconductor Laser -->
+  <div class="subsection">
+    <h3 class="subsection-title">8.5 Semiconductor Laser Diode</h3>
+    <p class="text">A semiconductor laser emits <strong>coherent, monochromatic, collimated light</strong> through stimulated emission. Requires forward bias above a threshold current.</p>
+    <div class="card purple">
+      <div class="card-title">Working Principle</div>
+      <ul>
+        <li>Requires <strong>heavily doped (degenerate)</strong> p and n regions</li>
+        <li>Heavy forward bias creates <strong>population inversion</strong> in active region</li>
+        <li>A photon triggers recombination → produces an <strong>identical</strong> photon (coherent — same phase, frequency, direction)</li>
+        <li>Cleaved crystal facets (~30% reflectivity) form a <strong>Fabry-Perot optical cavity</strong></li>
+        <li>Photons bounce back and forth, amplifying → laser action above threshold</li>
+        <li>Below threshold: spontaneous emission (like LED); above threshold: stimulated emission (laser)</li>
+      </ul>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="purple">Material System</th><th class="purple">Wavelength</th><th class="purple">Key Application</th></tr></thead>
+        <tbody>
+          <tr><td>InGaN / GaN</td><td>380–470 nm (Blue/UV)</td><td>Blu-ray disc, data storage</td></tr>
+          <tr><td>AlGaInP / GaAs</td><td>630–680 nm (Red)</td><td>DVD players, laser pointers</td></tr>
+          <tr><td>AlGaAs / GaAs</td><td>720–850 nm (Near IR)</td><td>CD players, laser printers, solid-state laser pumping</td></tr>
+          <tr><td>InGaAs / GaAs</td><td>900–1100 nm</td><td>Fibre amplifier pumping</td></tr>
+          <tr><td>InGaAsP / InP</td><td>1.2–2.0 μm</td><td>Optical fibre communications, sensing</td></tr>
+          <tr><td>AlGaAsSb / GaSb</td><td>1.8–3.4 μm</td><td>Defense, gas sensing, spectroscopy</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 9: COMPARISON ──────────────────────────────────── -->
+<section class="section" id="sec9">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2 class="section-title sky">Device Comparison Table</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th class="green">LED</th><th class="sky">Photodiode</th><th class="amber">Solar Cell</th><th class="purple">Laser Diode</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Function</strong></td><td>Electricity → Light</td><td>Light → Small current</td><td>Light → Electrical power</td><td>Electricity → Coherent light</td></tr>
+        <tr><td><strong>Bias Mode</strong></td><td><em>Forward bias</em></td><td><em>Reverse bias</em></td><td>No external bias</td><td><em>Forward bias (heavy doping)</em></td></tr>
+        <tr><td><strong>Light Output</strong></td><td>Incoherent, visible</td><td>None (detector)</td><td>None</td><td>Coherent, monochromatic</td></tr>
+        <tr><td><strong>Band Gap Req.</strong></td><td>Direct gap needed</td><td>Any semiconductor</td><td>Matches solar spectrum</td><td>Direct gap needed</td></tr>
+        <tr><td><strong>Key Materials</strong></td><td>GaAs, GaN, InGaN</td><td>Si, Ge, InGaAs</td><td>c-Si, a-Si, GaAs</td><td>GaAs, GaN, InGaAsP</td></tr>
+        <tr><td><strong>Operating Principle</strong></td><td>Electroluminescence</td><td>Photocurrent generation</td><td>Photovoltaic effect</td><td>Stimulated emission</td></tr>
+        <tr><td><strong>Electrical Input</strong></td><td>Required (forward)</td><td>Optional (reverse)</td><td>None required</td><td>Required (above threshold)</td></tr>
+        <tr><td><strong>Applications</strong></td><td>Lighting, displays, indicators, remote controls</td><td>Photodetection, optical comms, CCTV</td><td>Solar power, satellites</td><td>Optical comms, data storage, laser pointers</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION 10: FORMULAS ───────────────────────────────────── -->
+<section class="section" id="sec10">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title purple">Important Formulas — Quick Reference</h2>
+  </div>
+  <div class="formula-ref-grid">
+    <div class="formula-ref-item"><div class="flabel">Intrinsic Carrier Conc.</div><div class="feq">nᵢ = 2(2πkT/h²)^(3/2)(m*ₑm*ₕ)^(3/4)exp(−Eᵍ/2kT)</div><div class="fnote">Increases exponentially with T; decreases with larger Eᵍ</div></div>
+    <div class="formula-ref-item"><div class="flabel">Mass-Action Law</div><div class="feq">n · p = nᵢ²</div><div class="fnote">Valid for both intrinsic and extrinsic semiconductors</div></div>
+    <div class="formula-ref-item"><div class="flabel">Conductivity (general)</div><div class="feq">σ = neμₑ + peμₕ</div><div class="fnote">Both electrons and holes contribute</div></div>
+    <div class="formula-ref-item"><div class="flabel">Conductivity (intrinsic)</div><div class="feq">σ = A · exp(−Eᵍ/2kT)</div><div class="fnote">Plot ln σ vs 1/T → slope = −Eᵍ/2k</div></div>
+    <div class="formula-ref-item"><div class="flabel">Hall Coefficient (n-type)</div><div class="feq">R_H = −1/(ne)</div><div class="fnote">Negative for electrons</div></div>
+    <div class="formula-ref-item"><div class="flabel">Hall Coefficient (p-type)</div><div class="feq">R_H = +1/(pe)</div><div class="fnote">Positive for holes</div></div>
+    <div class="formula-ref-item"><div class="flabel">Hall Voltage</div><div class="feq">V_H = R_H · B · I / t</div><div class="fnote">t = thickness; B = magnetic field</div></div>
+    <div class="formula-ref-item"><div class="flabel">Hall Coefficient (measured)</div><div class="feq">R_H = V_H · t / (B · I)</div><div class="fnote">From measurements of V_H, t, B, I</div></div>
+    <div class="formula-ref-item"><div class="flabel">Hall Mobility</div><div class="feq">μ = |R_H| · σ</div><div class="fnote">Useful for determining carrier mobility</div></div>
+    <div class="formula-ref-item"><div class="flabel">Built-in Potential</div><div class="feq">V_bi = (kT/q) ln(N_A·N_D/nᵢ²)</div><div class="fnote">Si ~0.6 V, GaAs ~1.2 V at 300K</div></div>
+    <div class="formula-ref-item"><div class="flabel">Shockley Diode Equation</div><div class="feq">I = I₀(e^(qV/kT) − 1)</div><div class="fnote">I₀ = reverse saturation current</div></div>
+    <div class="formula-ref-item"><div class="flabel">Thermal Voltage</div><div class="feq">V_T = kT/q ≈ 0.026 V at 300 K</div><div class="fnote">k = 1.38×10⁻²³ J/K; q = 1.6×10⁻¹⁹ C</div></div>
+    <div class="formula-ref-item"><div class="flabel">Photon Energy</div><div class="feq">E = hν = hc/λ</div><div class="fnote">h = 6.626×10⁻³⁴ J·s; c = 3×10⁸ m/s</div></div>
+    <div class="formula-ref-item"><div class="flabel">LED/Laser Wavelength</div><div class="feq">λ = hc / Eᵍ</div><div class="fnote">Determines colour of emitted light</div></div>
+    <div class="formula-ref-item"><div class="flabel">Solar Cell Fill Factor</div><div class="feq">FF = P_max / (I_sc × V_oc)</div><div class="fnote">Typical range: 0.8 – 0.9</div></div>
+    <div class="formula-ref-item"><div class="flabel">Solar Cell Efficiency</div><div class="feq">η = P_max / P_in = FF·I_sc·V_oc / P_in</div><div class="fnote">P_in = incident solar irradiance (W/m²)</div></div>
+    <div class="formula-ref-item"><div class="flabel">Einstein's Relation</div><div class="feq">D/μ = kT/q = V_T</div><div class="fnote">D = diffusion coeff.; μ = mobility</div></div>
+    <div class="formula-ref-item"><div class="flabel">Carrier Concentration</div><div class="feq">n = 1 / (e · |R_H|)</div><div class="fnote">From Hall coefficient measurement</div></div>
+  </div>
+</section>
+
+<!-- ── SECTION 11: SOLVED PROBLEMS ───────────────────────────── -->
+<section class="section" id="sec11">
+  <div class="section-header">
+    <span class="section-num">11</span>
+    <h2 class="section-title teal">Solved Numerical Problems</h2>
+  </div>
+
+  <div class="problem">
+    <div class="problem-num">Problem 1 — Hall Effect (P-type identification)</div>
+    <div class="problem-q">A semiconductor slab carries I = 20 mA, thickness t = 1 mm, Hall voltage V_H = 37 μV, magnetic flux density B = 0.5 Wb/m². Find Hall coefficient and type.</div>
+    <div class="problem-step">Given: V_H = 37×10⁻⁶ V, t = 1×10⁻³ m, I = 20×10⁻³ A, B = 0.5 T</div>
+    <div class="problem-step">R_H = V_H·t / (B·I) = (37×10⁻⁶ × 1×10⁻³) / (20×10⁻³ × 0.5)</div>
+    <div class="problem-step">R_H = 37×10⁻⁹ / 10×10⁻³ = 3.7×10⁻⁶ C⁻¹m³</div>
+    <span class="problem-answer">R_H = +3.7×10⁻⁶ C⁻¹m³ → POSITIVE → P-type semiconductor</span>
+  </div>
+
+  <div class="problem">
+    <div class="problem-num">Problem 2 — Hall Effect (N-type identification)</div>
+    <div class="problem-q">t = 0.2 cm, B = 0.3 T, I = 3 A, V_H = −0.015 V. Find R_H and semiconductor type.</div>
+    <div class="problem-step">Given: t = 0.2 cm = 0.2×10⁻² m, B = 0.3 T, I = 3 A, V_H = −0.015 V</div>
+    <div class="problem-step">R_H = (−0.015 × 0.2×10⁻²) / (0.3 × 3) = −3×10⁻⁵ / 0.9 = −3.33×10⁻⁵ m³/C</div>
+    <div class="problem-step">= −0.0033 cm³/C</div>
+    <span class="problem-answer">R_H = −0.0033 cm³/C → NEGATIVE → N-type semiconductor</span>
+  </div>
+
+  <div class="problem">
+    <div class="problem-num">Problem 3 — Hall Effect (P-type, t = 0.1 cm)</div>
+    <div class="problem-q">t = 0.1 cm, B = 0.5 T, I = 2 A, V_H = 0.01 V. Find R_H and type.</div>
+    <div class="problem-step">R_H = V_H·t / (B·I) = (0.01 × 0.1×10⁻²) / (0.5 × 2)</div>
+    <div class="problem-step">R_H = 10⁻⁵ / 1 = 0.001 cm³/C</div>
+    <span class="problem-answer">R_H = +0.001 cm³/C → POSITIVE → P-type semiconductor</span>
+  </div>
+
+  <div class="problem">
+    <div class="problem-num">Problem 4 — LED: Photon Energy</div>
+    <div class="problem-q">Calculate the energy of a photon emitted by an LED with wavelength λ = 500 nm.</div>
+    <div class="problem-step">E = hc/λ = (6.626×10⁻³⁴ × 3×10⁸) / (500×10⁻⁹)</div>
+    <div class="problem-step">E = 19.878×10⁻²⁶ / 5×10⁻⁷ = 3.98×10⁻¹⁹ J</div>
+    <span class="problem-answer">E ≈ 3.98×10⁻¹⁹ J ≈ 2.49 eV (visible green-blue light)</span>
+  </div>
+
+  <div class="problem">
+    <div class="problem-num">Problem 5 — LED: Forward Voltage Drop</div>
+    <div class="problem-q">An LED has forward current I_f = 20 mA and power dissipation P = 100 mW. Find forward voltage V_f.</div>
+    <div class="problem-step">V_f = P / I_f = 100×10⁻³ / 20×10⁻³</div>
+    <span class="problem-answer">V_f = 5 V</span>
+  </div>
+
+  <div class="problem">
+    <div class="problem-num">Problem 6 — Semiconductor Laser: Wavelength</div>
+    <div class="problem-q">Calculate the wavelength of light emitted by a semiconductor laser with band gap Eᵍ = 1.2 eV.</div>
+    <div class="problem-step">λ = hc / Eᵍ = (6.626×10⁻³⁴ × 3×10⁸) / (1.2 × 1.6×10⁻¹⁹)</div>
+    <div class="problem-step">λ = 19.878×10⁻²⁶ / 1.92×10⁻¹⁹ = 1.035×10⁻⁶ m</div>
+    <span class="problem-answer">λ ≈ 1.04 μm (near-infrared — optical fibre communications)</span>
+  </div>
+
+  <div class="problem">
+    <div class="problem-num">Problem 7 — Solar Cell: Fill Factor, Max Power, Area</div>
+    <div class="problem-q">V_oc = 0.5 V, I_sc = 0.8 A, FF = 0.85. (a) Find P_max. (b) If V_mp = 0.4 V, find I_mp. (c) η = 10%, beam = 800 W/m², diffuse = 5% of beam. Find minimum cell area.</div>
+    <div class="problem-step">(a) P_max = FF × I_sc × V_oc = 0.85 × 0.8 × 0.5 = 0.34 W</div>
+    <div class="problem-step">(b) I_mp = P_max / V_mp = 0.34 / 0.4 = 0.85 A</div>
+    <div class="problem-step">(c) I_total = I_beam + I_diffuse = 800 + 800×0.05 = 840 W/m²</div>
+    <div class="problem-step">P_max = I_total × A_cell × η → 0.34 = 840 × A × 0.1 → A = 0.34/84</div>
+    <span class="problem-answer">A_cell ≈ 4.05×10⁻³ m² ≈ 40.5 cm²</span>
+  </div>
+</section>
+
+<!-- ── SECTION 12: QUICK SUMMARY ──────────────────────────────── -->
+<section class="section" id="sec12">
+  <div class="section-header">
+    <span class="section-num">12</span>
+    <h2 class="section-title teal">Quick Revision Summary</h2>
+  </div>
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <div class="summary-row"><div class="summary-key">Intrinsic SC</div><div class="summary-val">Pure semiconductor; n = p = nᵢ; Fermi level at midgap; σ ∝ exp(−Eᵍ/2kT)</div></div>
+    <div class="summary-row"><div class="summary-key">N-type</div><div class="summary-val">Pentavalent dopant (P, As, Sb); majority = electrons; Fermi near CB; R_H negative</div></div>
+    <div class="summary-row"><div class="summary-key">P-type</div><div class="summary-val">Trivalent dopant (B, Ga, In); majority = holes; Fermi near VB; R_H positive</div></div>
+    <div class="summary-row"><div class="summary-key">Direct gap</div><div class="summary-val">CB min &amp; VB max at same k; direct photon emission; used in LEDs, lasers (GaAs, GaN)</div></div>
+    <div class="summary-row"><div class="summary-key">Indirect gap</div><div class="summary-val">Different k values; phonon needed; inefficient light emission; Si, Ge, AlSb</div></div>
+    <div class="summary-row"><div class="summary-key">Hall Effect</div><div class="summary-val">V_H generated ⊥ to I and B; R_H = V_H·t/(B·I); gives carrier type, density &amp; mobility</div></div>
+    <div class="summary-row"><div class="summary-key">P-N Junction</div><div class="summary-val">Depletion region with V_bi; forward bias reduces barrier; reverse bias increases it</div></div>
+    <div class="summary-row"><div class="summary-key">Diode Equation</div><div class="summary-val">I = I₀(e^(qV/kT)−1); threshold ~0.7 V (Si), ~0.3 V (Ge), ~1.2 V (GaAs)</div></div>
+    <div class="summary-row"><div class="summary-key">LED</div><div class="summary-val">Forward biased; electroluminescence; λ = hc/Eᵍ; requires direct band gap material</div></div>
+    <div class="summary-row"><div class="summary-key">Photodiode</div><div class="summary-val">Reverse biased; photocurrent ∝ light intensity; PIN type has faster response &amp; wider spectral range</div></div>
+    <div class="summary-row"><div class="summary-key">Solar Cell</div><div class="summary-val">Photovoltaic effect; FF = P_max/(I_sc×V_oc); η = P_max/P_in; typical FF = 0.8–0.9</div></div>
+    <div class="summary-row"><div class="summary-key">Laser Diode</div><div class="summary-val">Forward biased (degenerate doping); population inversion; stimulated emission; coherent light output</div></div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER ───────────────────────────────────────────────────── -->
+<footer>
+  <p>Unit IV — Semiconductors &amp; Devices</p>
+  <p style="margin-top:0.4rem"><strong>Dr Kamil Reza K</strong> &nbsp;|&nbsp; Faculty of Physics, School of Technology &nbsp;|&nbsp; Woxsen University</p>
+  <p style="margin-top:0.2rem">kamil.reza@woxsen.edu.in</p>
+</footer>
+
+<!-- Back to Top ───────────────────────────────────────────────── -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Progress bar
+const bar = document.getElementById('progressBar');
+const btn = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+  const sc = document.documentElement.scrollTop;
+  const sh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  bar.style.width = (sc / sh * 100) + '%';
+  btn.classList.toggle('show', sc > 400);
+});
+
+// Active nav link
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (active) {
+        active.classList.add('active');
+        active.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+      }
+    }
+  });
+}, {threshold: 0.3});
+sections.forEach(s => observer.observe(s));
+
+// Animate sections on scroll
+const appear = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, {threshold: 0.05});
+
+document.querySelectorAll('.section').forEach(s => {
+  s.style.opacity = '0';
+  s.style.transform = 'translateY(32px)';
+  s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  appear.observe(s);
+});
+</script>
+</body>
+</html>

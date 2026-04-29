@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Notes — Woxsen University</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f1a;
+    --surface: #131629;
+    --surface2: #1a1e35;
+    --accent: #4f8ef7;
+    --accent2: #f7a84f;
+    --accent3: #4ff7a0;
+    --accent4: #f74f7a;
+    --text: #e8eaf0;
+    --text-muted: #8b90a8;
+    --border: #252a45;
+    --code-bg: #0a0c18;
+    --highlight: #4f8ef720;
+    --gold: #f7c84f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: 270px; height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 0 0 2rem;
+    transition: transform 0.3s;
+  }
+
+  .sidebar-logo {
+    padding: 1.5rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #1a1e35 0%, #0d1128 100%);
+  }
+
+  .sidebar-logo h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    line-height: 1.3;
+  }
+
+  .sidebar-logo p {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .nav-module {
+    padding: 0.8rem 1.4rem 0.3rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 0.45rem 1.4rem 0.45rem 1.8rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+
+  .sidebar a:hover {
+    color: var(--accent);
+    background: var(--highlight);
+    border-left-color: var(--accent);
+  }
+
+  .sidebar a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: var(--highlight);
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 270px;
+    padding: 2rem 3rem 5rem;
+    max-width: 1100px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #4f8ef720 0%, transparent 70%);
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #e8eaf0 0%, #4f8ef7 50%, #f7a84f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  .module-pills {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .pill {
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .pill-blue  { background: #4f8ef720; color: #4f8ef7; border: 1px solid #4f8ef740; }
+  .pill-orange{ background: #f7a84f20; color: #f7a84f; border: 1px solid #f7a84f40; }
+  .pill-green { background: #4ff7a020; color: #4ff7a0; border: 1px solid #4ff7a040; }
+  .pill-red   { background: #f74f7a20; color: #f74f7a; border: 1px solid #f74f7a40; }
+
+  /* ── SECTION HEADINGS ── */
+  .module-header {
+    margin: 4rem 0 2rem;
+    padding: 2rem 2rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--accent);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .module-header.m3::before { background: var(--accent); }
+  .module-header.m4a::before { background: var(--accent2); }
+  .module-header.m4b::before { background: var(--accent3); }
+  .module-header.m5::before { background: var(--accent4); }
+
+  .module-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .module-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin: 2.2rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  p { margin-bottom: 0.8rem; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.4rem 1.6rem;
+    margin: 1.2rem 0;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+
+  .card-grid .card {
+    margin: 0;
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .icon { font-size: 1rem; }
+
+  /* ── DEFINITION BOX ── */
+  .def-box {
+    background: linear-gradient(135deg, #1a1e35 0%, #131629 100%);
+    border: 1px solid var(--accent);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+  }
+
+  .def-box.orange { border-color: var(--accent2); border-left-color: var(--accent2); }
+  .def-box.green  { border-color: var(--accent3); border-left-color: var(--accent3); }
+  .def-box.red    { border-color: var(--accent4); border-left-color: var(--accent4); }
+  .def-box.gold   { border-color: var(--gold); border-left-color: var(--gold); }
+
+  .def-box strong { color: var(--accent); }
+  .def-box.orange strong { color: var(--accent2); }
+  .def-box.green  strong { color: var(--accent3); }
+  .def-box.red    strong { color: var(--accent4); }
+  .def-box.gold   strong { color: var(--gold); }
+
+  /* ── CODE ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    position: relative;
+  }
+
+  pre::before {
+    content: 'Python';
+    position: absolute;
+    top: 0.5rem; right: 0.8rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.84rem;
+    color: #a8d8ff;
+    line-height: 1.7;
+  }
+
+  p code, li code {
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    color: #a8d8ff;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+  }
+
+  .kw  { color: #c792ea; }
+  .fn  { color: #82aaff; }
+  .st  { color: #c3e88d; }
+  .cm  { color: #546e7a; font-style: italic; }
+  .nu  { color: #f78c6c; }
+  .op  { color: #89ddff; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  th {
+    background: var(--surface2);
+    color: var(--accent);
+    text-align: left;
+    padding: 0.7rem 1rem;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border);
+  }
+
+  td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  tr:hover td { background: var(--highlight); }
+
+  td:first-child { color: var(--text); font-weight: 600; }
+
+  /* ── DIAGRAM / VISUAL BLOCKS ── */
+  .diagram {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem;
+    margin: 1.2rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    overflow-x: auto;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  /* ── COMPLEXITY BADGE ── */
+  .complexity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.25rem 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent3);
+    margin: 0.2rem;
+  }
+
+  /* ── ALERT / NOTE ── */
+  .note {
+    background: #4f8ef710;
+    border: 1px solid #4f8ef730;
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+
+  .note.warn { background: #f7a84f10; border-color: #f7a84f30; border-left-color: var(--accent2); }
+  .note.tip  { background: #4ff7a010; border-color: #4ff7a030; border-left-color: var(--accent3); }
+  .note.imp  { background: #f74f7a10; border-color: #f74f7a30; border-left-color: var(--accent4); }
+
+  .note strong { color: var(--accent); }
+  .note.warn strong { color: var(--accent2); }
+  .note.tip  strong { color: var(--accent3); }
+  .note.imp  strong { color: var(--accent4); }
+
+  /* ── LISTS ── */
+  ul, ol { padding-left: 1.5rem; margin-bottom: 0.8rem; }
+  li { margin-bottom: 0.35rem; color: var(--text-muted); }
+  li strong { color: var(--text); }
+
+  /* ── ALGORITHM STEPS ── */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .steps li:last-child { border-bottom: none; }
+
+  .steps li::before {
+    content: counter(step);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── FORMULA ── */
+  .formula {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    color: var(--gold);
+    padding: 1rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 1rem; left: 1rem;
+    z-index: 200;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 40px; height: 40px;
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .sidebar {
+      transform: translateX(-100%);
+    }
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    .main {
+      margin-left: 0;
+      padding: 1rem 1.2rem 4rem;
+    }
+    .hamburger { display: flex; }
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #00000080;
+      z-index: 99;
+    }
+    .overlay.open { display: block; }
+  }
+
+  @media (max-width: 600px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.6rem; }
+    pre { font-size: 0.75rem; }
+  }
+
+  /* ── GRAPH SVG DIAGRAMS ── */
+  .svg-wrap {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1.2rem 0;
+    text-align: center;
+    overflow-x: auto;
+  }
+
+  svg text { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ── TOP PROGRESS BAR ── */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 999;
+    transition: width 0.1s;
+    width: 0%;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<button class="hamburger" id="ham" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h2>DSA with Python</h2>
+    <p>Woxsen University · 2025-29</p>
+  </div>
+
+  <div class="nav-module">Module III</div>
+  <a href="#m3-trees">Trees & Binary Trees</a>
+  <a href="#m3-bst">Binary Search Tree</a>
+  <a href="#m3-avl">AVL Trees</a>
+  <a href="#m3-heap">Heaps</a>
+  <a href="#m3-sorting">Sorting Algorithms</a>
+
+  <div class="nav-module">Module IV · Part 1</div>
+  <a href="#m4a-hash">Hash Tables</a>
+  <a href="#m4a-functions">Hash Functions</a>
+  <a href="#m4a-collision">Collision Resolution</a>
+  <a href="#m4a-rehash">Rehashing & Extendible</a>
+
+  <div class="nav-module">Module IV · Part 2</div>
+  <a href="#m4b-graphs">Graphs Intro</a>
+  <a href="#m4b-types">Types of Graphs</a>
+  <a href="#m4b-repr">Graph Representations</a>
+  <a href="#m4b-bfs">BFS Traversal</a>
+  <a href="#m4b-dfs">DFS Traversal</a>
+  <a href="#m4b-dijkstra">Dijkstra's Algorithm</a>
+
+  <div class="nav-module">Module V</div>
+  <a href="#m5-python">Python Built-in Structures</a>
+  <a href="#m5-list">Lists & Operations</a>
+  <a href="#m5-dict">Dictionaries & Sets</a>
+  <a href="#m5-tuple">Tuples</a>
+  <a href="#m5-collections">Collections Module</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">📘 Complete Study Notes</div>
+    <h1>Data Structures & Algorithms<br>using Python</h1>
+    <p class="hero-sub">Comprehensive notes covering Modules III, IV &amp; V — trees, hashing, graphs, traversals, Dijkstra's algorithm, and Python built-in data structures with industry applications.</p>
+    <div class="module-pills">
+      <span class="pill pill-blue">Module III — Trees &amp; Sorting</span>
+      <span class="pill pill-orange">Module IV — Hashing &amp; Graphs</span>
+      <span class="pill pill-green">Module V — Python DS</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!--                     MODULE III                          -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="module-header m3" id="m3-trees">
+    <div class="module-tag">Module III</div>
+    <h2>Trees, Binary Trees, BST, AVL Trees &amp; Sorting</h2>
+  </div>
+
+  <h3>🌳 Introduction to Trees</h3>
+
+  <div class="def-box">
+    <strong>Tree:</strong> A non-linear, hierarchical data structure consisting of nodes connected by edges. It has one special node called the <strong>root</strong>, and every other node is reachable from the root via a unique path. Trees are acyclic — they contain no cycles.
+  </div>
+
+  <h4>Tree Terminology</h4>
+  <div class="card-grid">
+    <div class="card"><div class="card-title"><span class="icon">🔵</span> Root</div>The topmost node with no parent. Entry point of the tree.</div>
+    <div class="card"><div class="card-title"><span class="icon">📄</span> Leaf Node</div>A node with no children. Also called external node or terminal node.</div>
+    <div class="card"><div class="card-title"><span class="icon">🔗</span> Edge</div>The link/connection between a parent node and its child node.</div>
+    <div class="card"><div class="card-title"><span class="icon">📏</span> Height</div>Longest path from root to a leaf. Height of a single node = 0.</div>
+    <div class="card"><div class="card-title"><span class="icon">📐</span> Depth</div>Distance from root to a given node. Root depth = 0.</div>
+    <div class="card"><div class="card-title"><span class="icon">🌿</span> Subtree</div>A node and all its descendants form a subtree.</div>
+    <div class="card"><div class="card-title"><span class="icon">👨‍👧</span> Degree</div>Number of children a node has. Degree of leaf = 0.</div>
+    <div class="card"><div class="card-title"><span class="icon">📊</span> Level</div>Root is at level 0 (or 1 in some definitions). Children are +1.</div>
+  </div>
+
+  <div class="svg-wrap">
+    <svg width="420" height="220" viewBox="0 0 420 220">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#4f8ef7" opacity="0.6"/>
+        </marker>
+      </defs>
+      <!-- edges -->
+      <line x1="210" y1="35" x2="120" y2="95" stroke="#4f8ef740" stroke-width="1.5"/>
+      <line x1="210" y1="35" x2="300" y2="95" stroke="#4f8ef740" stroke-width="1.5"/>
+      <line x1="120" y1="95" x2="70"  y2="160" stroke="#4f8ef740" stroke-width="1.5"/>
+      <line x1="120" y1="95" x2="160" y2="160" stroke="#4f8ef740" stroke-width="1.5"/>
+      <line x1="300" y1="95" x2="260" y2="160" stroke="#4f8ef740" stroke-width="1.5"/>
+      <line x1="300" y1="95" x2="350" y2="160" stroke="#4f8ef740" stroke-width="1.5"/>
+      <!-- nodes -->
+      <circle cx="210" cy="30" r="22" fill="#4f8ef720" stroke="#4f8ef7" stroke-width="1.5"/>
+      <circle cx="120" cy="95" r="22" fill="#4f8ef710" stroke="#4f8ef740"/>
+      <circle cx="300" cy="95" r="22" fill="#4f8ef710" stroke="#4f8ef740"/>
+      <circle cx="70"  cy="160" r="20" fill="#f7a84f20" stroke="#f7a84f50"/>
+      <circle cx="160" cy="160" r="20" fill="#f7a84f20" stroke="#f7a84f50"/>
+      <circle cx="260" cy="160" r="20" fill="#f7a84f20" stroke="#f7a84f50"/>
+      <circle cx="350" cy="160" r="20" fill="#f7a84f20" stroke="#f7a84f50"/>
+      <!-- labels -->
+      <text x="210" y="34" text-anchor="middle" fill="#4f8ef7" font-size="11">Root</text>
+      <text x="120" y="99" text-anchor="middle" fill="#e8eaf0" font-size="10">B</text>
+      <text x="300" y="99" text-anchor="middle" fill="#e8eaf0" font-size="10">C</text>
+      <text x="70"  y="164" text-anchor="middle" fill="#f7a84f" font-size="9">D</text>
+      <text x="160" y="164" text-anchor="middle" fill="#f7a84f" font-size="9">E</text>
+      <text x="260" y="164" text-anchor="middle" fill="#f7a84f" font-size="9">F</text>
+      <text x="350" y="164" text-anchor="middle" fill="#f7a84f" font-size="9">G</text>
+      <!-- level labels -->
+      <text x="20" y="34" fill="#546e7a" font-size="9">Level 0</text>
+      <text x="20" y="99" fill="#546e7a" font-size="9">Level 1</text>
+      <text x="20" y="164" fill="#546e7a" font-size="9">Level 2 (Leaves)</text>
+    </svg>
+  </div>
+
+  <h3 id="m3-bst">🔍 Binary Search Tree (BST)</h3>
+
+  <div class="def-box">
+    <strong>Binary Tree:</strong> A tree where each node has at most <strong>two children</strong> — a left child and a right child.
+  </div>
+
+  <div class="def-box orange">
+    <strong>Binary Search Tree (BST):</strong> A binary tree satisfying the BST property: for any node <em>n</em>, all values in its <strong>left subtree &lt; n.value</strong> and all values in its <strong>right subtree &gt; n.value</strong>.
+  </div>
+
+  <h4>BST Operations &amp; Time Complexity</h4>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Operation</th><th>Average Case</th><th>Worst Case (Skewed)</th></tr>
+      <tr><td>Search</td><td><span class="complexity">O(log n)</span></td><td><span class="complexity">O(n)</span></td></tr>
+      <tr><td>Insert</td><td><span class="complexity">O(log n)</span></td><td><span class="complexity">O(n)</span></td></tr>
+      <tr><td>Delete</td><td><span class="complexity">O(log n)</span></td><td><span class="complexity">O(n)</span></td></tr>
+    </table>
+  </div>
+
+  <h4>BST Implementation in Python</h4>
+<pre><code><span class="kw">class</span> <span class="fn">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, key):
+        self.key   = key
+        self.left  = <span class="kw">None</span>
+        self.right = <span class="kw">None</span>
+
+<span class="kw">class</span> <span class="fn">BST</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.root = <span class="kw">None</span>
+
+    <span class="cm"># Insert a key into the BST</span>
+    <span class="kw">def</span> <span class="fn">insert</span>(self, key):
+        <span class="kw">if</span> self.root <span class="kw">is</span> <span class="kw">None</span>:
+            self.root = Node(key)
+        <span class="kw">else</span>:
+            self._insert(self.root, key)
+
+    <span class="kw">def</span> <span class="fn">_insert</span>(self, node, key):
+        <span class="kw">if</span> key &lt; node.key:
+            <span class="kw">if</span> node.left <span class="kw">is</span> <span class="kw">None</span>:
+                node.left = Node(key)
+            <span class="kw">else</span>:
+                self._insert(node.left, key)
+        <span class="kw">else</span>:
+            <span class="kw">if</span> node.right <span class="kw">is</span> <span class="kw">None</span>:
+                node.right = Node(key)
+            <span class="kw">else</span>:
+                self._insert(node.right, key)
+
+    <span class="cm"># Inorder traversal (Left → Root → Right) → sorted output</span>
+    <span class="kw">def</span> <span class="fn">inorder</span>(self, node):
+        <span class="kw">if</span> node:
+            self.inorder(node.left)
+            <span class="fn">print</span>(node.key, end=<span class="st">" "</span>)
+            self.inorder(node.right)
+
+    <span class="cm"># Search for a key</span>
+    <span class="kw">def</span> <span class="fn">search</span>(self, root, key):
+        <span class="kw">if</span> root <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> root.key <span class="op">==</span> key:
+            <span class="kw">return</span> root
+        <span class="kw">if</span> key &lt; root.key:
+            <span class="kw">return</span> self.search(root.left, key)
+        <span class="kw">return</span> self.search(root.right, key)
+
+<span class="cm"># Usage</span>
+bst = BST()
+<span class="kw">for</span> v <span class="kw">in</span> [<span class="nu">50</span>, <span class="nu">30</span>, <span class="nu">70</span>, <span class="nu">20</span>, <span class="nu">40</span>, <span class="nu">60</span>, <span class="nu">80</span>]:
+    bst.insert(v)
+bst.inorder(bst.root)  <span class="cm"># → 20 30 40 50 60 70 80</span></code></pre>
+
+  <h4>Tree Traversals</h4>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🔄 Inorder (LNR)</div>
+      <p>Left → Node → Right</p>
+      <p>✅ Produces <strong>sorted output</strong> for a BST</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🔄 Preorder (NLR)</div>
+      <p>Node → Left → Right</p>
+      <p>Used to <strong>copy/serialize</strong> a tree</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🔄 Postorder (LRN)</div>
+      <p>Left → Right → Node</p>
+      <p>Used to <strong>delete</strong> a tree (children first)</p>
+    </div>
+  </div>
+
+  <h3 id="m3-avl">⚖️ AVL Trees (Self-Balancing BST)</h3>
+
+  <div class="def-box green">
+    <strong>AVL Tree:</strong> A self-balancing BST where the <strong>height difference (Balance Factor)</strong> between left and right subtrees of any node is at most <strong>1</strong>. Named after inventors Adelson-Velsky and Landis (1962).
+  </div>
+
+  <div class="formula">Balance Factor (BF) = Height(Left Subtree) − Height(Right Subtree) &nbsp;∈&nbsp; {−1, 0, +1}</div>
+
+  <h4>Rotations (Re-balancing Operations)</h4>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">↩️ LL Rotation (Right Rotate)</div>
+      <p>Triggered when BF &gt; 1 and new node inserted in <strong>Left-Left</strong> position. Perform a single right rotation.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">↪️ RR Rotation (Left Rotate)</div>
+      <p>Triggered when BF &lt; -1 and new node inserted in <strong>Right-Right</strong> position. Perform a single left rotation.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">↩️↪️ LR Rotation</div>
+      <p>Left-Right: First perform Left rotation on left child, then Right rotation on root.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">↪️↩️ RL Rotation</div>
+      <p>Right-Left: First perform Right rotation on right child, then Left rotation on root.</p>
+    </div>
+  </div>
+
+  <h4>AVL Tree Guarantees</h4>
+  <p>All operations (search, insert, delete) are guaranteed <span class="complexity">O(log n)</span> because the height of an AVL tree is always O(log n).</p>
+
+<pre><code><span class="kw">class</span> <span class="fn">AVLNode</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, key):
+        self.key    = key
+        self.left   = <span class="kw">None</span>
+        self.right  = <span class="kw">None</span>
+        self.height = <span class="nu">1</span>   <span class="cm"># New node starts at height 1</span>
+
+<span class="kw">def</span> <span class="fn">get_height</span>(node):
+    <span class="kw">return</span> node.height <span class="kw">if</span> node <span class="kw">else</span> <span class="nu">0</span>
+
+<span class="kw">def</span> <span class="fn">get_balance</span>(node):
+    <span class="kw">return</span> get_height(node.left) - get_height(node.right) <span class="kw">if</span> node <span class="kw">else</span> <span class="nu">0</span>
+
+<span class="kw">def</span> <span class="fn">right_rotate</span>(z):
+    y      = z.left
+    T3     = y.right
+    y.right = z           <span class="cm"># Perform rotation</span>
+    z.left  = T3
+    <span class="cm"># Update heights (order matters)</span>
+    z.height = <span class="nu">1</span> + <span class="fn">max</span>(get_height(z.left), get_height(z.right))
+    y.height = <span class="nu">1</span> + <span class="fn">max</span>(get_height(y.left), get_height(y.right))
+    <span class="kw">return</span> y  <span class="cm"># y is new root</span>
+
+<span class="kw">def</span> <span class="fn">left_rotate</span>(z):
+    y      = z.right
+    T2     = y.left
+    y.left  = z
+    z.right = T2
+    z.height = <span class="nu">1</span> + <span class="fn">max</span>(get_height(z.left), get_height(z.right))
+    y.height = <span class="nu">1</span> + <span class="fn">max</span>(get_height(y.left), get_height(y.right))
+    <span class="kw">return</span> y</code></pre>
+
+  <h3 id="m3-heap">🏔️ Heaps (Priority Queues)</h3>
+
+  <div class="def-box orange">
+    <strong>Heap:</strong> A complete binary tree satisfying the <em>heap property</em>. Stored efficiently as an array. Used to implement priority queues.
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🔼 Max-Heap</div>
+      <p>Parent ≥ Children. The maximum element is always at the <strong>root (index 0)</strong>.</p>
+      <p>Used in: Heap Sort, finding k-largest elements.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🔽 Min-Heap</div>
+      <p>Parent ≤ Children. The minimum element is always at the <strong>root (index 0)</strong>.</p>
+      <p>Used in: Dijkstra's Algorithm, scheduling, Prim's MST.</p>
+    </div>
+  </div>
+
+  <h4>Heap Index Formulas (0-based array)</h4>
+  <div class="formula">
+    Parent of i  =  ⌊(i − 1) / 2⌋
+    Left Child   =  2i + 1
+    Right Child  =  2i + 2
+  </div>
+
+<pre><code><span class="kw">import</span> heapq
+
+<span class="cm"># Min-Heap (default in Python)</span>
+heap = []
+heapq.heappush(heap, <span class="nu">5</span>)
+heapq.heappush(heap, <span class="nu">2</span>)
+heapq.heappush(heap, <span class="nu">8</span>)
+<span class="fn">print</span>(heapq.heappop(heap))   <span class="cm"># → 2 (smallest)</span>
+
+<span class="cm"># Max-Heap: negate values</span>
+max_heap = []
+<span class="kw">for</span> v <span class="kw">in</span> [<span class="nu">5</span>, <span class="nu">2</span>, <span class="nu">8</span>, <span class="nu">1</span>]:
+    heapq.heappush(max_heap, -v)
+<span class="fn">print</span>(-heapq.heappop(max_heap))  <span class="cm"># → 8 (largest)</span>
+
+<span class="cm"># heapify: convert list to heap in O(n)</span>
+data = [<span class="nu">9</span>, <span class="nu">3</span>, <span class="nu">7</span>, <span class="nu">1</span>, <span class="nu">5</span>]
+heapq.heapify(data)
+<span class="fn">print</span>(data[<span class="nu">0</span>])   <span class="cm"># → 1</span></code></pre>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Operation</th><th>Time Complexity</th></tr>
+      <tr><td>heappush (insert)</td><td><span class="complexity">O(log n)</span></td></tr>
+      <tr><td>heappop (extract min/max)</td><td><span class="complexity">O(log n)</span></td></tr>
+      <tr><td>heapify (build heap)</td><td><span class="complexity">O(n)</span></td></tr>
+      <tr><td>Peek (view root)</td><td><span class="complexity">O(1)</span></td></tr>
+    </table>
+  </div>
+
+  <h3 id="m3-sorting">🔀 Sorting Algorithms</h3>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🫧 Bubble Sort</div>
+      <p>Repeatedly swaps adjacent elements if out of order. Simple but slow.</p>
+      <p>Best: <span class="complexity">O(n)</span> | Average/Worst: <span class="complexity">O(n²)</span></p>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Selection Sort</div>
+      <p>Finds minimum, places at start, repeats for remaining array.</p>
+      <p>Always: <span class="complexity">O(n²)</span></p>
+    </div>
+    <div class="card">
+      <div class="card-title">🃏 Insertion Sort</div>
+      <p>Builds sorted portion one element at a time. Efficient for small/nearly sorted data.</p>
+      <p>Best: <span class="complexity">O(n)</span> | Worst: <span class="complexity">O(n²)</span></p>
+    </div>
+    <div class="card">
+      <div class="card-title">⚡ Merge Sort</div>
+      <p>Divide and conquer: split, sort recursively, merge. Stable sort.</p>
+      <p>Always: <span class="complexity">O(n log n)</span> | Space: <span class="complexity">O(n)</span></p>
+    </div>
+    <div class="card">
+      <div class="card-title">⚡ Quick Sort</div>
+      <p>Pick pivot, partition around it, recursively sort partitions.</p>
+      <p>Avg: <span class="complexity">O(n log n)</span> | Worst: <span class="complexity">O(n²)</span></p>
+    </div>
+    <div class="card">
+      <div class="card-title">🏔️ Heap Sort</div>
+      <p>Build max-heap, repeatedly extract max. In-place but not stable.</p>
+      <p>Always: <span class="complexity">O(n log n)</span> | Space: <span class="complexity">O(1)</span></p>
+    </div>
+  </div>
+
+<pre><code><span class="cm"># Merge Sort Implementation</span>
+<span class="kw">def</span> <span class="fn">merge_sort</span>(arr):
+    <span class="kw">if</span> <span class="fn">len</span>(arr) &lt;= <span class="nu">1</span>:
+        <span class="kw">return</span> arr
+    mid   = <span class="fn">len</span>(arr) <span class="op">//</span> <span class="nu">2</span>
+    left  = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    <span class="kw">return</span> merge(left, right)
+
+<span class="kw">def</span> <span class="fn">merge</span>(left, right):
+    result, i, j = [], <span class="nu">0</span>, <span class="nu">0</span>
+    <span class="kw">while</span> i &lt; <span class="fn">len</span>(left) <span class="kw">and</span> j &lt; <span class="fn">len</span>(right):
+        <span class="kw">if</span> left[i] &lt;= right[j]:
+            result.append(left[i]);  i += <span class="nu">1</span>
+        <span class="kw">else</span>:
+            result.append(right[j]); j += <span class="nu">1</span>
+    result.extend(left[i:])
+    result.extend(right[j:])
+    <span class="kw">return</span> result
+
+<span class="fn">print</span>(merge_sort([<span class="nu">38</span>, <span class="nu">27</span>, <span class="nu">43</span>, <span class="nu">3</span>, <span class="nu">9</span>]))  <span class="cm"># → [3, 9, 27, 38, 43]</span></code></pre>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!--                   MODULE IV PART 1                      -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="module-header m4a" id="m4a-hash">
+    <div class="module-tag">Module IV · Part 1</div>
+    <h2>Hash Table Representation</h2>
+  </div>
+
+  <h3>🗂️ Introduction to Hashing</h3>
+
+  <div class="def-box orange">
+    <strong>Hash Table:</strong> A data structure that maps <em>keys</em> to <em>values</em> using a <strong>hash function</strong>. Provides average-case O(1) time for insertion, deletion, and search — making it one of the most powerful data structures in practice.
+  </div>
+
+  <h4>Key Components</h4>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🔑 Key</div>The input data (e.g., a name, ID, or string) that needs to be stored.
+    </div>
+    <div class="card">
+      <div class="card-title">⚙️ Hash Function</div>Converts a key into an index in the hash table array.
+    </div>
+    <div class="card">
+      <div class="card-title">🪣 Bucket / Slot</div>An array index where the value is stored.
+    </div>
+    <div class="card">
+      <div class="card-title">💥 Collision</div>When two different keys hash to the same index.
+    </div>
+  </div>
+
+  <h3 id="m4a-functions">⚙️ Hash Functions</h3>
+
+  <h4>1. Division Method (Most Common)</h4>
+  <div class="formula">h(k) = k mod m</div>
+  <p>Where <code>k</code> is the key and <code>m</code> is the table size. Best when <code>m</code> is a prime number not close to a power of 2.</p>
+
+  <h4>2. Multiplication Method</h4>
+  <div class="formula">h(k) = ⌊m × (k × A mod 1)⌋ &nbsp;&nbsp; where A ≈ 0.6180339887 (golden ratio)</div>
+
+  <h4>3. Folding Method</h4>
+  <p>Split the key into parts, add them together, then take mod. E.g., key = 123456789 → 123 + 456 + 789 = 1368 → 1368 mod m.</p>
+
+  <h4>4. Mid-Square Method</h4>
+  <p>Square the key, extract middle digits. E.g., k = 79 → 79² = 6241 → middle digits = 24 → index = 24 mod m.</p>
+
+  <div class="note">
+    <strong>Properties of a Good Hash Function:</strong> Uniform distribution (minimises collisions), fast to compute, deterministic (same key → same hash), and minimizes clustering.
+  </div>
+
+  <h3 id="m4a-collision">💥 Collision Resolution Techniques</h3>
+
+  <div class="def-box red">
+    <strong>Collision:</strong> When two keys k₁ ≠ k₂ but h(k₁) = h(k₂). Collisions are <em>inevitable</em> (Birthday Paradox), so all hash tables need a strategy to handle them.
+  </div>
+
+  <h4>Open Addressing — All entries in the hash table itself</h4>
+
+  <div class="card">
+    <div class="card-title">📏 1. Linear Probing</div>
+    <div class="formula">h(k, i) = (h(k) + i) mod m &nbsp;&nbsp; i = 0, 1, 2, ...</div>
+    <p>If slot is occupied, check next slot, then next, etc. Simple but leads to <strong>primary clustering</strong> — long chains of occupied slots form.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📐 2. Quadratic Probing</div>
+    <div class="formula">h(k, i) = (h(k) + c₁·i + c₂·i²) mod m</div>
+    <p>Probe sequence jumps quadratically. Reduces primary clustering but can cause <strong>secondary clustering</strong>. May not probe all slots.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔀 3. Double Hashing</div>
+    <div class="formula">h(k, i) = (h₁(k) + i · h₂(k)) mod m</div>
+    <p>Uses a second hash function for step size. Best among open addressing — eliminates both primary and secondary clustering. h₂(k) must never be 0 and should be coprime with m.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⛓️ 4. Chaining (Separate Chaining)</div>
+    <p>Each slot holds a linked list of all keys that hash to that slot. Collision = append to list. Never runs out of space. Load factor can exceed 1.</p>
+  </div>
+
+<pre><code><span class="cm"># Hash Table with Chaining in Python</span>
+<span class="kw">class</span> <span class="fn">HashTable</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, size=<span class="nu">10</span>):
+        self.size  = size
+        self.table = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(size)]
+
+    <span class="kw">def</span> <span class="fn">hash_fn</span>(self, key):
+        <span class="kw">return</span> <span class="fn">hash</span>(key) <span class="op">%</span> self.size
+
+    <span class="kw">def</span> <span class="fn">insert</span>(self, key, value):
+        idx = self.hash_fn(key)
+        <span class="kw">for</span> i, (k, v) <span class="kw">in</span> <span class="fn">enumerate</span>(self.table[idx]):
+            <span class="kw">if</span> k <span class="op">==</span> key:
+                self.table[idx][i] = (key, value)
+                <span class="kw">return</span>
+        self.table[idx].append((key, value))
+
+    <span class="kw">def</span> <span class="fn">get</span>(self, key):
+        idx = self.hash_fn(key)
+        <span class="kw">for</span> k, v <span class="kw">in</span> self.table[idx]:
+            <span class="kw">if</span> k <span class="op">==</span> key:
+                <span class="kw">return</span> v
+        <span class="kw">return</span> <span class="kw">None</span>
+
+ht = HashTable()
+ht.insert(<span class="st">"name"</span>, <span class="st">"Alice"</span>)
+ht.insert(<span class="st">"age"</span>, <span class="nu">21</span>)
+<span class="fn">print</span>(ht.get(<span class="st">"name"</span>))  <span class="cm"># → Alice</span></code></pre>
+
+  <h4>Comparison of Collision Resolution</h4>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Method</th><th>Clustering</th><th>Space</th><th>Best For</th></tr>
+      <tr><td>Linear Probing</td><td>Primary (severe)</td><td>O(n)</td><td>Cache-friendly access</td></tr>
+      <tr><td>Quadratic Probing</td><td>Secondary</td><td>O(n)</td><td>Moderate load factors</td></tr>
+      <tr><td>Double Hashing</td><td>None</td><td>O(n)</td><td>High performance needed</td></tr>
+      <tr><td>Chaining</td><td>None</td><td>O(n + m)</td><td>Unknown/high load factor</td></tr>
+    </table>
+  </div>
+
+  <h3 id="m4a-rehash">🔄 Rehashing</h3>
+
+  <div class="def-box">
+    <strong>Rehashing:</strong> When the load factor (α = n/m) exceeds a threshold (typically 0.7), create a new table of roughly double the size and re-insert all existing keys using the new hash function. This maintains O(1) amortized performance.
+  </div>
+
+  <div class="formula">Load Factor α = n / m &nbsp;&nbsp; (n = number of entries, m = table size)</div>
+
+  <div class="note tip">
+    <strong>💡 Rule of thumb:</strong> Rehash when α &gt; 0.7 (open addressing) or α &gt; 1.0 (chaining). Python's <code>dict</code> rehashes at α = 2/3.
+  </div>
+
+  <h4>Extendible Hashing</h4>
+  <p>A dynamic hashing technique for <strong>disk-based databases</strong>. Uses a <em>directory</em> of pointers to <em>buckets</em>. When a bucket overflows, only that bucket is split — not the entire table. The directory doubles only when needed. Avoids the cost of full rehashing on large datasets.</p>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!--                   MODULE IV PART 2                      -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="module-header m4b" id="m4b-graphs">
+    <div class="module-tag">Module IV · Part 2</div>
+    <h2>Graphs — Implementation &amp; Traversal</h2>
+  </div>
+
+  <h3>📊 Introduction to Graphs</h3>
+
+  <div class="def-box green">
+    <strong>Graph G(V, E):</strong> A data structure consisting of a set of <strong>vertices (nodes) V</strong> and a set of <strong>edges E</strong> connecting pairs of vertices. Each vertex represents an entity; each edge represents a relationship or connection between two entities.
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🔵 Vertex (Node)</div>A fundamental unit. Represents an entity (person, city, router, gene…)
+    </div>
+    <div class="card">
+      <div class="card-title">🔗 Edge</div>A connection between two vertices. Can be directed or undirected, weighted or unweighted.
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Degree</div>Number of edges connected to a vertex. In directed graphs: In-degree + Out-degree.
+    </div>
+    <div class="card">
+      <div class="card-title">🛣️ Path</div>A sequence of vertices where each consecutive pair is connected by an edge. <em>Simple path</em> = no repeated vertices.
+    </div>
+  </div>
+
+  <h4>Real-World Applications of Graphs</h4>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">📱 Social Networks</div>Users = nodes, friendships/follows = edges. Used for recommendations, influence analysis.</div>
+    <div class="card"><div class="card-title">🗺️ Transportation</div>Cities = nodes, roads = edges (weighted by distance/time). GPS navigation, route optimization.</div>
+    <div class="card"><div class="card-title">🧬 Biological Networks</div>Neurons/genes = nodes, synapses/interactions = edges. Brain mapping, protein interaction.</div>
+    <div class="card"><div class="card-title">⚡ Electrical Grids</div>Power stations/transformers = nodes, power lines = edges. Grid optimization, fault detection.</div>
+    <div class="card"><div class="card-title">💧 Water Networks</div>Junctions = nodes, pipes = edges. Flow optimization, leak detection.</div>
+    <div class="card"><div class="card-title">🌐 Internet Routing</div>Routers = nodes, connections = edges (weighted by latency). Packet routing (OSPF uses Dijkstra).</div>
+  </div>
+
+  <h3 id="m4b-types">🗂️ Types of Graphs</h3>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Definition</th><th>Key Property</th></tr>
+      <tr><td>Undirected Graph</td><td>Edges have no direction</td><td>Edge (u,v) = Edge (v,u)</td></tr>
+      <tr><td>Directed Graph (Digraph)</td><td>Edges have direction (arrows)</td><td>Edge (u,v) ≠ Edge (v,u)</td></tr>
+      <tr><td>Weighted Graph</td><td>Edges have associated weights/costs</td><td>Used in shortest path algorithms</td></tr>
+      <tr><td>Unweighted Graph</td><td>All edges treated equally</td><td>BFS finds shortest path by edges</td></tr>
+      <tr><td>Complete Graph</td><td>Every vertex connected to every other</td><td>Edges = n(n−1)/2</td></tr>
+      <tr><td>Bipartite Graph</td><td>Vertices split into two sets; edges only between sets</td><td>No odd-length cycles</td></tr>
+      <tr><td>Tree</td><td>Connected, acyclic undirected graph</td><td>Edges = Vertices − 1</td></tr>
+      <tr><td>Cyclic Graph</td><td>Contains at least one cycle</td><td>Edges ≥ Vertices</td></tr>
+      <tr><td>Acyclic Graph (DAG)</td><td>No cycles; if directed = DAG</td><td>Edges &lt; Vertices</td></tr>
+      <tr><td>Sparse Graph</td><td>Few edges relative to vertices</td><td>E ≪ V²; use adjacency list</td></tr>
+      <tr><td>Dense Graph</td><td>Many edges relative to vertices</td><td>E ≈ V²; use adjacency matrix</td></tr>
+    </table>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🌀 Cyclic Graph</div>
+      <p>Contains at least one cycle. Condition: <strong>n ≤ e</strong> (nodes ≤ edges).</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🌳 Acyclic Graph</div>
+      <p>No cycles. Condition: <strong>n &gt; e</strong> (nodes &gt; edges). A tree is always acyclic.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🌲 Rooted Tree</div>
+      <p>An acyclic directed graph with one designated root. Always directed (parent → children).</p>
+    </div>
+  </div>
+
+  <h3 id="m4b-repr">📋 Graph Representation Methods</h3>
+
+  <h4>1. Adjacency Matrix</h4>
+  <div class="def-box">
+    A V×V 2D array where <code>matrix[i][j] = 1</code> (or weight) if there's an edge from vertex i to vertex j, else <code>0</code>.
+    <br><br>
+    <strong>Undirected:</strong> Matrix is symmetric (matrix[i][j] = matrix[j][i]).<br>
+    <strong>Directed:</strong> Not necessarily symmetric.
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">✅ Pros</div>
+      <ul><li>O(1) edge lookup</li><li>Simple to implement</li><li>Good for dense graphs</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">❌ Cons</div>
+      <ul><li>O(V²) space — wastes memory for sparse graphs</li><li>O(V) to find all neighbors of a vertex</li></ul>
+    </div>
+  </div>
+
+<pre><code><span class="cm"># Adjacency Matrix representation</span>
+V = <span class="nu">4</span>
+<span class="cm"># Graph: 0-1, 0-2, 1-2, 1-3, 2-3</span>
+matrix = [[<span class="nu">0</span>]*V <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(V)]
+
+<span class="kw">def</span> <span class="fn">add_edge</span>(matrix, u, v):
+    matrix[u][v] = <span class="nu">1</span>
+    matrix[v][u] = <span class="nu">1</span>   <span class="cm"># Remove for directed graph</span>
+
+add_edge(matrix, <span class="nu">0</span>, <span class="nu">1</span>)
+add_edge(matrix, <span class="nu">0</span>, <span class="nu">2</span>)
+add_edge(matrix, <span class="nu">1</span>, <span class="nu">3</span>)
+add_edge(matrix, <span class="nu">2</span>, <span class="nu">3</span>)
+
+<span class="kw">for</span> row <span class="kw">in</span> matrix:
+    <span class="fn">print</span>(row)
+<span class="cm"># [0, 1, 1, 0]
+# [1, 0, 0, 1]
+# [1, 0, 0, 1]
+# [0, 1, 1, 0]</span></code></pre>
+
+  <h4>2. Adjacency List</h4>
+  <div class="def-box green">
+    Each vertex stores a list of its neighboring vertices. In Python, implemented as a dictionary of lists. More memory-efficient for sparse graphs.
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">✅ Pros</div>
+      <ul><li>Space-efficient: O(V + E)</li><li>Fast neighbor enumeration</li><li>Ideal for sparse graphs</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">❌ Cons</div>
+      <ul><li>O(degree) edge lookup (not O(1))</li><li>Slightly more complex to implement</li></ul>
+    </div>
+  </div>
+
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+
+<span class="kw">class</span> <span class="fn">Graph</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.adj = defaultdict(<span class="fn">list</span>)
+
+    <span class="kw">def</span> <span class="fn">add_edge</span>(self, u, v, directed=<span class="kw">False</span>):
+        self.adj[u].append(v)
+        <span class="kw">if</span> <span class="kw">not</span> directed:
+            self.adj[v].append(u)
+
+g = Graph()
+g.add_edge(<span class="st">'A'</span>, <span class="st">'B'</span>)
+g.add_edge(<span class="st">'A'</span>, <span class="st">'C'</span>)
+g.add_edge(<span class="st">'B'</span>, <span class="st">'D'</span>)
+
+<span class="fn">print</span>(<span class="fn">dict</span>(g.adj))
+<span class="cm"># {'A': ['B', 'C'], 'B': ['A', 'D'], 'C': ['A'], 'D': ['B']}</span></code></pre>
+
+  <h4>Comparison: Matrix vs. List</h4>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Property</th><th>Adjacency Matrix</th><th>Adjacency List</th></tr>
+      <tr><td>Space Complexity</td><td>O(V²)</td><td>O(V + E)</td></tr>
+      <tr><td>Check edge (u,v)</td><td>O(1)</td><td>O(degree(u))</td></tr>
+      <tr><td>Find all neighbors of v</td><td>O(V)</td><td>O(degree(v))</td></tr>
+      <tr><td>Add edge</td><td>O(1)</td><td>O(1)</td></tr>
+      <tr><td>Best for</td><td>Dense graphs</td><td>Sparse graphs</td></tr>
+    </table>
+  </div>
+
+  <h3 id="m4b-bfs">🌊 Breadth-First Search (BFS)</h3>
+
+  <div class="def-box green">
+    <strong>BFS:</strong> A graph traversal algorithm that explores all vertices at the current depth level before moving to vertices at the next depth level. It uses a <strong>Queue (FIFO)</strong> data structure. Also called <em>Level-order traversal</em>.
+  </div>
+
+  <h4>BFS Algorithm Steps</h4>
+  <ol class="steps">
+    <li><strong>Choose a starting node.</strong> Mark it as visited and enqueue it.</li>
+    <li><strong>While queue is not empty:</strong> Dequeue the front node — this becomes the current node.</li>
+    <li><strong>Inspect adjacent nodes:</strong> For every unvisited neighbor of the current node, mark it visited and enqueue it.</li>
+    <li><strong>Iterate:</strong> Repeat dequeue → explore → enqueue until the queue is empty.</li>
+    <li><strong>Termination:</strong> Queue empty means all reachable nodes have been visited in breadth-first order.</li>
+  </ol>
+
+  <div class="note tip">
+    <strong>💡 Key property:</strong> BFS guarantees finding the <em>shortest path</em> (by number of edges) in an unweighted graph. The level at which a node is first discovered = shortest distance from source.
+  </div>
+
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">bfs</span>(graph, start):
+    visited = {start}
+    queue   = deque([start])
+    order   = []
+
+    <span class="kw">while</span> queue:
+        node = queue.popleft()          <span class="cm"># Dequeue front (FIFO)</span>
+        order.append(node)
+
+        <span class="kw">for</span> neighbor <span class="kw">in</span> graph[node]:
+            <span class="kw">if</span> neighbor <span class="kw">not in</span> visited:
+                visited.add(neighbor)
+                queue.append(neighbor)  <span class="cm"># Enqueue unvisited neighbor</span>
+
+    <span class="kw">return</span> order
+
+graph = {
+    <span class="st">'A'</span>: [<span class="st">'B'</span>, <span class="st">'C'</span>],
+    <span class="st">'B'</span>: [<span class="st">'A'</span>, <span class="st">'D'</span>, <span class="st">'E'</span>],
+    <span class="st">'C'</span>: [<span class="st">'A'</span>, <span class="st">'F'</span>],
+    <span class="st">'D'</span>: [<span class="st">'B'</span>], <span class="st">'E'</span>: [<span class="st">'B'</span>], <span class="st">'F'</span>: [<span class="st">'C'</span>]
+}
+<span class="fn">print</span>(bfs(graph, <span class="st">'A'</span>))  <span class="cm"># → ['A', 'B', 'C', 'D', 'E', 'F']</span></code></pre>
+
+  <h4>BFS Walkthrough Example (Graph: A-B-C-D-E-F-G-H)</h4>
+  <div class="diagram">Graph edges: A-B, A-C, B-D, C-D, C-E, D-E, D-F, E-G, F-G, F-H, G-H
+
+Step-by-step BFS from A:
+┌─────────────────────────────────────────────────────────────┐
+│ Step │ Current │ Queue (before) │ Queue (after) │ Visited   │
+├─────────────────────────────────────────────────────────────┤
+│  1   │    —    │      [A]       │    [B, C]     │ A         │
+│  2   │    A    │    [B, C]      │  [C, D]       │ A, B      │
+│  3   │    B    │    [C, D]      │  [D, E]       │ A, B, C   │
+│  4   │    C    │    [D, E]      │  [E, F]       │ A, B, C, D│
+│  5   │    D    │    [E, F]      │  [F, G]       │ +E        │
+│  6   │    E    │    [F, G]      │  [G, H]       │ +F        │
+│  7   │    F    │    [G, H]      │     [H]       │ +G        │
+│  8   │    G    │      [H]       │      []       │ +H        │
+└─────────────────────────────────────────────────────────────┘
+BFS Order: A → B → C → D → E → F → G → H</div>
+
+  <h4>BFS Applications</h4>
+  <ul>
+    <li><strong>Shortest path</strong> in unweighted graphs</li>
+    <li><strong>Level-order tree traversal</strong></li>
+    <li><strong>Web crawlers</strong> (explore pages level by level)</li>
+    <li><strong>COVID spread modeling</strong> — BFS tells how many time units it takes to reach all nodes from infected nodes</li>
+    <li><strong>Bipartite graph checking</strong></li>
+    <li><strong>Finding connected components</strong></li>
+  </ul>
+
+  <p><span class="complexity">Time: O(V + E)</span> <span class="complexity">Space: O(V)</span></p>
+
+  <h3 id="m4b-dfs">🔍 Depth-First Search (DFS)</h3>
+
+  <div class="def-box orange">
+    <strong>DFS:</strong> A graph traversal that explores as far as possible along each branch before backtracking. Uses a <strong>Stack (LIFO)</strong> — either explicitly or via recursion's call stack. Also called <em>Pre-order traversal</em>.
+  </div>
+
+  <h4>DFS Algorithm Steps</h4>
+  <ol class="steps">
+    <li><strong>Choose a starting node.</strong> Mark it visited, push to stack.</li>
+    <li><strong>For each unvisited adjacent node:</strong> Recursively perform DFS — dive deeper, marking nodes visited.</li>
+    <li><strong>Backtrack:</strong> When a node has no unvisited neighbors, return to the previous node.</li>
+    <li><strong>Repeat</strong> until all reachable nodes are visited.</li>
+  </ol>
+
+<pre><code><span class="cm"># DFS - Recursive</span>
+<span class="kw">def</span> <span class="fn">dfs_recursive</span>(graph, node, visited=<span class="kw">None</span>, order=<span class="kw">None</span>):
+    <span class="kw">if</span> visited <span class="kw">is</span> <span class="kw">None</span>: visited = <span class="fn">set</span>()
+    <span class="kw">if</span> order   <span class="kw">is</span> <span class="kw">None</span>: order   = []
+    visited.add(node)
+    order.append(node)
+    <span class="kw">for</span> neighbor <span class="kw">in</span> graph[node]:
+        <span class="kw">if</span> neighbor <span class="kw">not in</span> visited:
+            dfs_recursive(graph, neighbor, visited, order)
+    <span class="kw">return</span> order
+
+<span class="cm"># DFS - Iterative (using explicit stack)</span>
+<span class="kw">def</span> <span class="fn">dfs_iterative</span>(graph, start):
+    visited = <span class="fn">set</span>()
+    stack   = [start]
+    order   = []
+
+    <span class="kw">while</span> stack:
+        node = stack.pop()              <span class="cm"># Pop from top (LIFO)</span>
+        <span class="kw">if</span> node <span class="kw">not in</span> visited:
+            visited.add(node)
+            order.append(node)
+            <span class="cm"># Push neighbors (reversed to maintain left-to-right order)</span>
+            <span class="kw">for</span> neighbor <span class="kw">in</span> <span class="fn">reversed</span>(graph[node]):
+                <span class="kw">if</span> neighbor <span class="kw">not in</span> visited:
+                    stack.append(neighbor)
+    <span class="kw">return</span> order
+
+<span class="fn">print</span>(dfs_iterative(graph, <span class="st">'A'</span>))  <span class="cm"># → ['A', 'B', 'D', 'E', 'C', 'F']</span></code></pre>
+
+  <h4>DFS Walkthrough (same graph A-H)</h4>
+  <div class="diagram">DFS from A (visiting neighbors in alphabetical order):
+
+Stack evolution:                Visited order:
+[A]                           → Visit A
+[B, C]  (push A's neighbors)  → Visit B (pop top: C is waiting)
+[C, D, E] (push B's neighbors)→ Visit C
+[D, E, E] → Visit D           
+[E, E, F, G] → Visit E (skip duplicate E)
+[E, F, G, H] → Visit F (pop E = already visited)
+[G, H]   → Visit G
+[H]      → Visit H
+
+DFS Order: A → C → E → G → H → F → D → B</div>
+
+  <h4>BFS vs DFS — When to Use Which?</h4>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🌊 Use BFS when...</div>
+      <ul>
+        <li>Finding <strong>shortest path</strong> (unweighted)</li>
+        <li>Exploring nodes <strong>level by level</strong></li>
+        <li>Finding all nodes within a given distance</li>
+        <li>COVID/infection spread modeling (BFS = levels = time units)</li>
+        <li>Web crawling near a source</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🔍 Use DFS when...</div>
+      <ul>
+        <li>Finding <strong>all paths</strong> or all reachable nodes</li>
+        <li>Topological sorting of a DAG</li>
+        <li>Detecting cycles</li>
+        <li><strong>Maze/puzzle solving</strong> (explore all dead-ends)</li>
+        <li>ATM problem: finding end-of-path nodes</li>
+        <li>Tree serialization / cloning</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Property</th><th>BFS</th><th>DFS</th></tr>
+      <tr><td>Data Structure</td><td>Queue (FIFO)</td><td>Stack (LIFO) / Recursion</td></tr>
+      <tr><td>Order</td><td>Level by level</td><td>Depth first (branch by branch)</td></tr>
+      <tr><td>Shortest Path</td><td>✅ Guaranteed (unweighted)</td><td>❌ Not guaranteed</td></tr>
+      <tr><td>Memory</td><td>O(V) — can be large (wide graphs)</td><td>O(h) — h = max depth</td></tr>
+      <tr><td>Complete?</td><td>Yes (finite graphs)</td><td>Yes (with visited tracking)</td></tr>
+      <tr><td>Time Complexity</td><td>O(V + E)</td><td>O(V + E)</td></tr>
+    </table>
+  </div>
+
+  <h3 id="m4b-dijkstra">🗺️ Dijkstra's Shortest Path Algorithm</h3>
+
+  <div class="def-box gold">
+    <strong>Dijkstra's Algorithm</strong> (pronounced "DYEK-struh"): A <em>greedy</em> algorithm that finds the <strong>shortest path from a single source to all other nodes</strong> in a weighted graph with <strong>non-negative edge weights</strong>. Foundational in networking (OSPF), GPS navigation, game AI, and logistics.
+  </div>
+
+  <h4>Key Steps</h4>
+  <ol class="steps">
+    <li><strong>Initialization:</strong> Set distance to source = 0; all other nodes = ∞. Add source to priority queue (min-heap).</li>
+    <li><strong>Extract minimum:</strong> Pop the node with smallest tentative distance from the priority queue.</li>
+    <li><strong>Relaxation:</strong> For each neighbor of current node: if dist[current] + edge_weight &lt; dist[neighbor], update dist[neighbor] and add to queue.</li>
+    <li><strong>Repeat</strong> until priority queue is empty — all shortest distances are finalized.</li>
+  </ol>
+
+  <div class="formula">
+    Relaxation condition: dist[v] = min(dist[v], dist[u] + weight(u, v))
+  </div>
+
+<pre><code><span class="kw">import</span> heapq
+
+<span class="kw">def</span> <span class="fn">dijkstra</span>(graph, start):
+    <span class="cm">"""
+    graph: dict of {node: [(neighbor, weight), ...]}
+    Returns: dict of shortest distances from start
+    """</span>
+    dist = {node: <span class="fn">float</span>(<span class="st">'inf'</span>) <span class="kw">for</span> node <span class="kw">in</span> graph}
+    dist[start] = <span class="nu">0</span>
+    pq = [(0, start)]      <span class="cm"># (distance, node) — min-heap</span>
+    prev = {node: <span class="kw">None</span> <span class="kw">for</span> node <span class="kw">in</span> graph}
+
+    <span class="kw">while</span> pq:
+        curr_dist, u = heapq.heappop(pq)
+
+        <span class="cm"># Skip if already found a shorter path</span>
+        <span class="kw">if</span> curr_dist &gt; dist[u]:
+            <span class="kw">continue</span>
+
+        <span class="kw">for</span> v, weight <span class="kw">in</span> graph[u]:
+            new_dist = dist[u] + weight
+            <span class="kw">if</span> new_dist &lt; dist[v]:           <span class="cm"># Relaxation</span>
+                dist[v] = new_dist
+                prev[v] = u
+                heapq.heappush(pq, (new_dist, v))
+
+    <span class="kw">return</span> dist, prev
+
+<span class="kw">def</span> <span class="fn">get_path</span>(prev, end):
+    path = []
+    <span class="kw">while</span> end <span class="kw">is not</span> <span class="kw">None</span>:
+        path.append(end); end = prev[end]
+    <span class="kw">return</span> path[::-<span class="nu">1</span>]
+
+<span class="cm"># Example graph from lecture (A→H)</span>
+graph = {
+    <span class="st">'A'</span>: [(<span class="st">'B'</span>, <span class="nu">5</span>), (<span class="st">'C'</span>, <span class="nu">7</span>)],
+    <span class="st">'B'</span>: [(<span class="st">'C'</span>, <span class="nu">6</span>), (<span class="st">'D'</span>, <span class="nu">8</span>)],
+    <span class="st">'C'</span>: [(<span class="st">'D'</span>, <span class="nu">2</span>), (<span class="st">'E'</span>, <span class="nu">4</span>)],
+    <span class="st">'D'</span>: [(<span class="st">'E'</span>, <span class="nu">1</span>), (<span class="st">'F'</span>, <span class="nu">2</span>)],
+    <span class="st">'E'</span>: [(<span class="st">'F'</span>, <span class="nu">3</span>), (<span class="st">'G'</span>, <span class="nu">7</span>)],
+    <span class="st">'F'</span>: [(<span class="st">'G'</span>, <span class="nu">2</span>), (<span class="st">'H'</span>, <span class="nu">6</span>)],
+    <span class="st">'G'</span>: [(<span class="st">'H'</span>, <span class="nu">2</span>)],
+    <span class="st">'H'</span>: []
+}
+dist, prev = dijkstra(graph, <span class="st">'A'</span>)
+<span class="fn">print</span>(dist[<span class="st">'H'</span>])            <span class="cm"># → 15</span>
+<span class="fn">print</span>(get_path(prev, <span class="st">'H'</span>))  <span class="cm"># → ['A', 'C', 'D', 'F', 'G', 'H']</span></code></pre>
+
+  <h4>Dijkstra Worked Example — A → H</h4>
+  <div class="diagram">Graph: A→B(5), A→C(7), B→C(6), C→D(2), B→D(8), D→E(1), E→F(3), D→F(2), F→G(2), E→G(7), F→H(6), G→H(2)
+
+Initialization: dist = {A:0, B:∞, C:∞, D:∞, E:∞, F:∞, G:∞, H:∞}
+
+Step 1 — Process A (dist=0):
+  Update B: min(∞, 0+5) = 5   ✓
+  Update C: min(∞, 0+7) = 7   ✓
+  dist = {A:0, B:5, C:7, D:∞, E:∞, F:∞, G:∞, H:∞}
+
+Step 2 — Process B (dist=5, smallest):
+  Update C: min(7, 5+6=11) = 7  (no change)
+  Update D: min(∞, 5+8=13) → 13  wait...
+  Actually C→D cheaper: Step 3 first
+
+Step 3 — Process C (dist=7):
+  Update D: min(13, 7+2=9) = 9   ✓
+  Update E: min(∞, 7+4=11) → not in original; skip if no edge
+
+Step 4 — Process D (dist=9):
+  Update E: min(∞, 9+1=10) = 10  ✓
+  Update F: min(∞, 9+2=11) = 11  ✓
+
+Step 5 — Process E (dist=10):
+  Update F: min(11,10+3=13) = 11 (no change)
+  Update G: min(∞, 10+7=17) = 17 (tentative)
+
+Step 6 — Process F (dist=11):
+  Update G: min(17, 11+2=13) = 13 ✓
+  Update H: min(∞, 11+6=17) = 17 (tentative)
+
+Step 7 — Process G (dist=13):
+  Update H: min(17, 13+2=15) = 15 ✓
+
+Step 8 — Process H (dist=15): Done!
+
+Final: A→C→D→F→G→H = 7+2+2+2+2 = 15 ✓</div>
+
+  <h4>Dijkstra Complexity &amp; Limitations</h4>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">⏱️ Time Complexity</div>
+      <p>With min-heap: <span class="complexity">O((V + E) log V)</span></p>
+      <p>V = vertices, E = edges</p>
+    </div>
+    <div class="card">
+      <div class="card-title">💾 Space Complexity</div>
+      <p><span class="complexity">O(V)</span> for distance array and priority queue.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">❌ Limitation</div>
+      <p>Fails with <strong>negative edge weights</strong>. Use <strong>Bellman-Ford</strong> for graphs with negative weights (O(VE)).</p>
+    </div>
+    <div class="card">
+      <div class="card-title">✅ Guarantee</div>
+      <p>Finds the true shortest path for all non-negative weighted graphs — greedy choice is globally optimal.</p>
+    </div>
+  </div>
+
+  <h4>Real-World Applications of Dijkstra</h4>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">🌐 Network Routing</div>OSPF protocol uses Dijkstra. Nodes = routers, edges = latency.</div>
+    <div class="card"><div class="card-title">🗺️ GPS Navigation</div>Nodes = cities, edges = travel time. Google Maps, Waze.</div>
+    <div class="card"><div class="card-title">🤖 Robotics</div>Grid = graph, obstacles = infinite weight edges. Path planning.</div>
+    <div class="card"><div class="card-title">📦 Logistics</div>Warehouses = nodes, shipping cost = edge weight. Minimum cost delivery.</div>
+    <div class="card"><div class="card-title">🎮 Game AI</div>Map tiles = nodes, movement cost = edges. NPC pathfinding (A* is Dijkstra + heuristic).</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!--                     MODULE V                            -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="module-header m5" id="m5-python">
+    <div class="module-tag">Module V</div>
+    <h2>Python Built-in Data Structures — Revision</h2>
+  </div>
+
+  <h3 id="m5-list">📝 Lists</h3>
+
+  <div class="def-box red">
+    <strong>List:</strong> An ordered, mutable, heterogeneous sequence. Internally a dynamic array (over-allocated for amortized O(1) append). One of Python's most versatile built-in structures.
+  </div>
+
+<pre><code><span class="cm"># Creation</span>
+lst = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>]
+empty = []
+mixed = [<span class="nu">1</span>, <span class="st">"hello"</span>, <span class="nu">3.14</span>, [<span class="nu">1</span>,<span class="nu">2</span>]]
+
+<span class="cm"># Core operations</span>
+lst.append(<span class="nu">6</span>)           <span class="cm"># O(1) amortized — add to end</span>
+lst.insert(<span class="nu">0</span>, <span class="nu">0</span>)        <span class="cm"># O(n) — insert at index</span>
+lst.pop()               <span class="cm"># O(1) — remove last</span>
+lst.pop(<span class="nu">0</span>)             <span class="cm"># O(n) — remove at index 0</span>
+lst.remove(<span class="nu">3</span>)          <span class="cm"># O(n) — remove first occurrence of 3</span>
+lst.sort()              <span class="cm"># O(n log n) — Timsort, in-place</span>
+lst.reverse()           <span class="cm"># O(n)</span>
+lst.index(<span class="nu">4</span>)           <span class="cm"># O(n) — first index of value 4</span>
+<span class="fn">len</span>(lst)               <span class="cm"># O(1)</span>
+<span class="nu">4</span> <span class="kw">in</span> lst               <span class="cm"># O(n) — membership test</span>
+
+<span class="cm"># Slicing</span>
+lst[<span class="nu">1</span>:<span class="nu">4</span>]               <span class="cm"># elements at index 1, 2, 3</span>
+lst[::-<span class="nu">1</span>]              <span class="cm"># reverse copy</span>
+lst[::<span class="nu">2</span>]               <span class="cm"># every 2nd element</span>
+
+<span class="cm"># List comprehension</span>
+squares = [x**<span class="nu">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">10</span>)]
+evens   = [x   <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">20</span>) <span class="kw">if</span> x % <span class="nu">2</span> <span class="op">==</span> <span class="nu">0</span>]
+
+<span class="cm"># Stack (LIFO) using list</span>
+stack = []
+stack.append(<span class="nu">1</span>)        <span class="cm"># push</span>
+stack.pop()             <span class="cm"># pop (O(1))</span>
+
+<span class="cm"># Queue (FIFO) — use deque, NOT list (list.pop(0) is O(n))</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+queue = deque()
+queue.append(<span class="nu">1</span>)        <span class="cm"># enqueue O(1)</span>
+queue.popleft()         <span class="cm"># dequeue O(1)</span></code></pre>
+
+  <h4>List Complexity Summary</h4>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Operation</th><th>Complexity</th><th>Note</th></tr>
+      <tr><td>lst[i] (index)</td><td>O(1)</td><td>Random access</td></tr>
+      <tr><td>append(x)</td><td>O(1) amortized</td><td>May trigger resize</td></tr>
+      <tr><td>insert(i, x)</td><td>O(n)</td><td>Shifts elements</td></tr>
+      <tr><td>pop() / pop(-1)</td><td>O(1)</td><td>From end</td></tr>
+      <tr><td>pop(0) / pop(i)</td><td>O(n)</td><td>Shifts elements</td></tr>
+      <tr><td>x in lst</td><td>O(n)</td><td>Linear scan</td></tr>
+      <tr><td>sort()</td><td>O(n log n)</td><td>Timsort</td></tr>
+      <tr><td>len(lst)</td><td>O(1)</td><td>Cached</td></tr>
+    </table>
+  </div>
+
+  <h3 id="m5-dict">📚 Dictionaries</h3>
+
+  <div class="def-box red">
+    <strong>Dictionary (dict):</strong> An ordered (Python 3.7+), mutable mapping of unique <em>keys</em> to <em>values</em>. Implemented as a hash table internally. Provides O(1) average-case for get, set, delete.
+  </div>
+
+<pre><code><span class="cm"># Creation</span>
+d = {<span class="st">'name'</span>: <span class="st">'Alice'</span>, <span class="st">'age'</span>: <span class="nu">21</span>, <span class="st">'city'</span>: <span class="st">'Hyderabad'</span>}
+d2 = <span class="fn">dict</span>(name=<span class="st">'Bob'</span>, age=<span class="nu">22</span>)
+
+<span class="cm"># Access</span>
+d[<span class="st">'name'</span>]              <span class="cm"># → 'Alice' (KeyError if missing)</span>
+d.get(<span class="st">'phone'</span>, <span class="st">'N/A'</span>)  <span class="cm"># → 'N/A' (safe, no exception)</span>
+
+<span class="cm"># Modification</span>
+d[<span class="st">'age'</span>] = <span class="nu">22</span>          <span class="cm"># update</span>
+d[<span class="st">'email'</span>] = <span class="st">'a@b.com'</span> <span class="cm"># insert</span>
+<span class="kw">del</span> d[<span class="st">'city'</span>]          <span class="cm"># delete</span>
+d.pop(<span class="st">'age'</span>)           <span class="cm"># delete and return value</span>
+
+<span class="cm"># Iteration</span>
+<span class="kw">for</span> key <span class="kw">in</span> d:            <span class="cm"># iterate keys</span>
+    <span class="fn">print</span>(key, d[key])
+
+<span class="kw">for</span> k, v <span class="kw">in</span> d.items():   <span class="cm"># iterate key-value pairs</span>
+    <span class="fn">print</span>(k, v)
+
+<span class="cm"># Dict comprehension</span>
+squared = {x: x**<span class="nu">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">6</span>)}
+<span class="cm"># → {0:0, 1:1, 2:4, 3:9, 4:16, 5:25}</span>
+
+<span class="cm"># setdefault and update</span>
+d.setdefault(<span class="st">'score'</span>, <span class="nu">0</span>)  <span class="cm"># set only if key absent</span>
+d.update({<span class="st">'x'</span>: <span class="nu">1</span>, <span class="st">'y'</span>: <span class="nu">2</span>})  <span class="cm"># merge dicts</span>
+
+<span class="cm"># Counting pattern (very common!)</span>
+words = [<span class="st">'apple'</span>, <span class="st">'banana'</span>, <span class="st">'apple'</span>, <span class="st">'cherry'</span>]
+count = {}
+<span class="kw">for</span> w <span class="kw">in</span> words:
+    count[w] = count.get(w, <span class="nu">0</span>) + <span class="nu">1</span>
+<span class="cm"># → {'apple': 2, 'banana': 1, 'cherry': 1}</span></code></pre>
+
+  <h3>🔢 Sets</h3>
+
+  <div class="def-box red">
+    <strong>Set:</strong> An unordered collection of <em>unique</em> elements. Internally a hash table with no values. Provides O(1) average-case membership test — much faster than lists for large datasets.
+  </div>
+
+<pre><code><span class="cm"># Creation</span>
+s = {<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>}
+s2 = <span class="fn">set</span>([<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">2</span>, <span class="nu">3</span>])  <span class="cm"># → {1, 2, 3} (duplicates removed)</span>
+
+<span class="cm"># Operations</span>
+s.add(<span class="nu">6</span>)              <span class="cm"># O(1) — add element</span>
+s.remove(<span class="nu">1</span>)           <span class="cm"># O(1) — remove (KeyError if absent)</span>
+s.discard(<span class="nu">99</span>)         <span class="cm"># O(1) — remove, no error if absent</span>
+<span class="nu">3</span> <span class="kw">in</span> s                <span class="cm"># O(1) — membership test</span>
+
+<span class="cm"># Set operations (mathematical)</span>
+A = {<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>};  B = {<span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>}
+A | B      <span class="cm"># Union → {1,2,3,4,5}</span>
+A &amp; B      <span class="cm"># Intersection → {3}</span>
+A - B      <span class="cm"># Difference → {1,2} (in A not B)</span>
+A ^ B      <span class="cm"># Symmetric Difference → {1,2,4,5}</span>
+A.issubset(B)     <span class="cm"># Is A ⊆ B?</span>
+A.issuperset(B)   <span class="cm"># Is A ⊇ B?</span></code></pre>
+
+  <h3 id="m5-tuple">📌 Tuples</h3>
+
+  <div class="def-box red">
+    <strong>Tuple:</strong> An ordered, <em>immutable</em> sequence. Faster than lists, hashable (can be used as dict keys or in sets). Use tuples for fixed data — coordinates, RGB values, records.
+  </div>
+
+<pre><code><span class="cm"># Creation</span>
+t = (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)
+single = (<span class="nu">42</span>,)        <span class="cm"># Single-element tuple needs trailing comma!</span>
+coords = (<span class="nu">10.5</span>, <span class="nu">20.3</span>) <span class="cm"># x, y coordinate</span>
+
+<span class="cm"># Unpacking</span>
+x, y, z = t
+first, *rest = (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>)  <span class="cm"># first=1, rest=[2,3,4]</span>
+
+<span class="cm"># Tuple as dict key (hashable, unlike list!)</span>
+grid = {}
+grid[(<span class="nu">0</span>, <span class="nu">0</span>)] = <span class="st">'start'</span>
+grid[(<span class="nu">3</span>, <span class="nu">4</span>)] = <span class="st">'end'</span>
+
+<span class="cm"># Named tuples — better than plain tuples</span>
+<span class="kw">from</span> collections <span class="kw">import</span> namedtuple
+Point  = namedtuple(<span class="st">'Point'</span>, [<span class="st">'x'</span>, <span class="st">'y'</span>])
+p = Point(<span class="nu">3</span>, <span class="nu">4</span>)
+<span class="fn">print</span>(p.x, p.y)  <span class="cm"># → 3 4 (access by name!)</span></code></pre>
+
+  <h3 id="m5-collections">🧰 Collections Module</h3>
+
+  <h4>deque — Double-ended Queue</h4>
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+dq = deque([<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>])
+dq.appendleft(<span class="nu">0</span>)    <span class="cm"># O(1) — add to left</span>
+dq.popleft()        <span class="cm"># O(1) — remove from left</span>
+dq.append(<span class="nu">4</span>)        <span class="cm"># O(1) — add to right</span>
+dq.rotate(<span class="nu">1</span>)        <span class="cm"># rotate right by 1</span>
+<span class="cm"># Perfect for BFS (use as queue) and sliding window</span></code></pre>
+
+  <h4>Counter — Counting Elements</h4>
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+words = [<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'a'</span>, <span class="st">'c'</span>, <span class="st">'a'</span>, <span class="st">'b'</span>]
+c = Counter(words)
+<span class="fn">print</span>(c)               <span class="cm"># Counter({'a':3, 'b':2, 'c':1})</span>
+<span class="fn">print</span>(c.most_common(<span class="nu">2</span>)) <span class="cm"># → [('a',3), ('b',2)]</span>
+
+<span class="cm"># Also works on strings</span>
+char_count = Counter(<span class="st">"hello world"</span>)
+<span class="cm"># Arithmetic: c1 + c2, c1 - c2</span></code></pre>
+
+  <h4>defaultdict — Dict with Default Values</h4>
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+
+<span class="cm"># Avoids KeyError for missing keys</span>
+graph  = defaultdict(<span class="fn">list</span>)    <span class="cm"># default = empty list</span>
+count  = defaultdict(<span class="fn">int</span>)     <span class="cm"># default = 0</span>
+nested = defaultdict(<span class="fn">dict</span>)    <span class="cm"># default = {}</span>
+
+graph[<span class="st">'A'</span>].append(<span class="st">'B'</span>)       <span class="cm"># No KeyError!</span>
+count[<span class="st">'word'</span>] += <span class="nu">1</span>           <span class="cm"># No KeyError!</span></code></pre>
+
+  <h4>OrderedDict</h4>
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> OrderedDict
+
+<span class="cm"># Before Python 3.7: use this for ordered dicts</span>
+<span class="cm"># Now, regular dict maintains insertion order</span>
+od = OrderedDict()
+od[<span class="st">'a'</span>] = <span class="nu">1</span>; od[<span class="st">'b'</span>] = <span class="nu">2</span>
+od.move_to_end(<span class="st">'a'</span>)           <span class="cm"># move to end</span>
+od.popitem(last=<span class="kw">False</span>)        <span class="cm"># remove first item</span>
+<span class="cm"># Classic use: LRU Cache implementation</span></code></pre>
+
+  <h4>Overall Complexity Cheat Sheet</h4>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Space</th></tr>
+      <tr><td>List</td><td>O(1)</td><td>O(n)</td><td>O(1)*</td><td>O(n)</td><td>O(n)</td></tr>
+      <tr><td>Dict / Set</td><td>O(1)</td><td>O(1)</td><td>O(1)</td><td>O(1)</td><td>O(n)</td></tr>
+      <tr><td>Tuple</td><td>O(1)</td><td>O(n)</td><td>N/A</td><td>N/A</td><td>O(n)</td></tr>
+      <tr><td>deque</td><td>O(n)</td><td>O(n)</td><td>O(1)**</td><td>O(1)**</td><td>O(n)</td></tr>
+      <tr><td>BST</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>O(n)</td></tr>
+      <tr><td>Heap</td><td>O(1)***</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td><td>O(n)</td></tr>
+      <tr><td>Hash Table</td><td>O(1)</td><td>O(1)</td><td>O(1)</td><td>O(1)</td><td>O(n)</td></tr>
+    </table>
+  </div>
+  <p style="font-size:0.78rem;color:var(--text-muted)">* amortized &nbsp;&nbsp; ** at both ends &nbsp;&nbsp; *** peek only</p>
+
+  <div class="note imp" style="margin-top:3rem">
+    <strong>⚠️ Important for Exams:</strong> Know the difference between BFS (queue, level-order, shortest unweighted path) and DFS (stack, depth-first, cycle detection). Understand Dijkstra's relaxation step and why it fails on negative edges. Be able to trace BST insertion and AVL rotations. Know hash collision resolution strategies by name and formula.
+  </div>
+
+  <footer style="margin-top:4rem;padding:2rem 0;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:0.78rem;">
+    <p>DSA with Python · Woxsen University · B.Tech I Year II Semester (2025–29)</p>
+    <p style="margin-top:0.3rem">Notes compiled from Modules III, IV &amp; V by Dr. Syed Javeed</p>
+  </footer>
+
+</main>
+
+<script>
+// Sidebar toggle
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+
+// Progress bar
+window.addEventListener('scroll', () => {
+  const el  = document.getElementById('progress');
+  const doc = document.documentElement;
+  const pct = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+  el.style.width = pct + '%';
+});
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.sidebar a');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+sections.forEach(s => obs.observe(s));
+
+// Close sidebar on link click (mobile)
+navLinks.forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
